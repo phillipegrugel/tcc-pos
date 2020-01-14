@@ -10,6 +10,8 @@ namespace ClinicaMedica.Models
     public string NumeroCarteiraTrabalho { get; set; }
     public string CRM { get; set; }
     public TipoProfissional Tipo { get; set; }
+
+    public Usuario Usuario { get; set; }
   }
 
   public enum TipoProfissional
