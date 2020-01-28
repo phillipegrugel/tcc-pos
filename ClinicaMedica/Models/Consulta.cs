@@ -9,7 +9,7 @@ namespace ClinicaMedica.Models
   {
     public int Id { get; set; }
     public Paciente Paciente { get; set; }
-    public Profissional Medico { get; set; }
+    public ProfissionalModel Medico { get; set; }
     public DateTime DiaHora { get; set; }
   }
 }

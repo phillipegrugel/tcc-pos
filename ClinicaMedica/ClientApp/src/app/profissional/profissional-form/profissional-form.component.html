@@ -1,0 +1,57 @@
+<po-page-edit
+    p-title="Novo profissional">
+    <po-divider class="po-sm-12" p-label="Dados pessoais"></po-divider>
+    <po-input class="po-md-8"
+        name="nome"
+        [(ngModel)]="profissional.nome"
+        p-label="Nome">
+    </po-input>
+    <po-datepicker class="po-md-4"
+        name="data-nascimento"
+        p-label="Data de Nascimento"
+        [(ngModel)]="profissional.dataNascimento">
+    </po-datepicker>
+    <po-input class="po-md-4"
+        name="CPF"
+        [(ngModel)]="profissional.cpf"
+        p-label="CPF">
+    </po-input>
+    <po-email class="po-md-4"
+        name="email"
+        [(ngModel)]="profissional.email"
+        p-label="E-mail">
+    </po-email>
+    <po-input class="po-md-4"
+        name="telefone"
+        [(ngModel)]="profissional.telefone"
+        p-label="Telefone">
+    </po-input>
+    <po-divider class="po-sm-12" p-label="Dados profissionais"></po-divider>
+    <po-input class="po-md-4"
+        name="carteira-trabalho"
+        [(ngModel)]="profissional.numeroCarteiraTrabalho"
+        p-label="Carteira de Trabalho">
+    </po-input>
+    <po-input class="po-md-4"
+        name="crm"
+        [(ngModel)]="profissional.crm"
+        p-label="CRM">
+    </po-input>
+    <po-select class="po-md-4"
+        name="tipo"
+        [p-options]="tipoOptions"
+        [(ngModel)]="profissional.tipo"
+        p-label="Tipo">
+    </po-select>
+    <po-divider class="po-sm-12" p-label="Segurança"></po-divider>
+    <po-password class="po-md-4"
+        name="senha"
+        [(ngModel)]="profissional.usuario.senha"
+        p-label="Senha">
+    </po-password>
+    <po-password class="po-md-4"
+        name="confirmar-senha"
+        [(ngModel)]="profissional.usuario.confirmarSenha"
+        p-label="Confirmar Senha">
+    </po-password>
+</po-page-edit>

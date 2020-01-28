@@ -8,7 +8,7 @@ namespace ClinicaMedica.Models
   public class AgendaMedico
   {
     public int Id { get; set; }
-    public Profissional Medico { get; set; }
+    public ProfissionalModel Medico { get; set; }
     public DateTime DataInicio { get; set; }
     public DateTime DataFim { get; set; }
     public List<DateTime> HorariosLivres { get; set; }

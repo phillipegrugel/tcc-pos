@@ -1,1 +1,11 @@
-<p>profissional-list works!</p>
+<po-page-list
+    p-title="Profissionais"
+    [p-actions]="actions">
+    <po-table
+        [p-items]="profissionais"
+        [p-columns]="columns"
+        p-sort="true"
+        [p-loading]="loading"
+        [p-actions]="tableActions">
+    </po-table>
+</po-page-list>

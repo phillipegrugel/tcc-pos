@@ -10,7 +10,6 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { PoModule } from '@portinari/portinari-ui';
-import { ProfissionalListComponent } from './profissional/profissional-list/profissional-list.component';
 import { ProfissionalModule } from './profissional/profissional.module'
 
 @NgModule({
@@ -30,7 +29,7 @@ import { ProfissionalModule } from './profissional/profissional.module'
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'profissional', component: ProfissionalListComponent }
+      { path: 'profissional', loadChildren: './profissional/profissional.module#ProfissionalModule'}
     ]),
     PoModule,
     RouterModule.forRoot([])

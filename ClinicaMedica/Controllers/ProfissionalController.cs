@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ClinicaMedica.Models;
+using ClinicaMedica.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,25 +13,42 @@ namespace ClinicaMedica.Controllers
   [ApiController]
   public class ProfissionalController : ControllerBase
   {
-    [HttpGet]
-    public IEnumerable<Profissional> Get()
+    private readonly IProfissionalService _profissionalService;
+    public ProfissionalController(IProfissionalService profissionalService)
     {
-      List<Profissional> list = new List<Profissional>();
-      list.Add(new Profissional() { Nome = "Phillipe", CPF = "090.593.666-38", DataNascimento = new DateTime(1989, 12, 25) });
+      _profissionalService = profissionalService;
+    }
 
-      return list;
+    [HttpGet]
+    public async Task<IEnumerable<ProfissionalModel>> Get()
+    {
+      return await _profissionalService.BuscaProfissionais();
     }
 
     [HttpGet("{id}", Name = "Profissional")]
-    public Profissional Get(int id)
+    public async Task<ProfissionalModel> Get(int id)
     {
-      return new Profissional() { Nome = "Phillipe", CPF = "090.593.666-38", DataNascimento = new DateTime(1989, 12, 25) };
+      //return await _profissionalService.BuscaProfissional(id);
+      ProfissionalModel profissionalModel = await _profissionalService.BuscaProfissional(id);
+      return profissionalModel;
     }
 
     [HttpPost]
-    public void Post(Profissional profissional)
+    public async Task<bool> Post(ProfissionalModel profissional)
     {
+      return await _profissionalService.CreateProfissional(profissional);
+    }
 
+    [HttpPut]
+    public async Task<bool> Put(ProfissionalModel profissional)
+    {
+      return await _profissionalService.UpdateProfissional(profissional);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<bool> Delete(int id)
+    {
+      return await _profissionalService.Delete(id);
     }
   }
 }
