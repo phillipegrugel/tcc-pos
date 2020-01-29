@@ -26,6 +26,7 @@ export class ProfissionalFormComponent implements OnInit {
     numeroCarteiraTrabalho: '',
     telefone: '',
     tipo: TipoProfissional.Medico,
+    tipoString: TipoProfissional.Medico.toString(),
     usuario: {
       confirmarSenha: '',
       id: 0,

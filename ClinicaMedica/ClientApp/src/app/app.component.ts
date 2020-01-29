@@ -11,7 +11,8 @@ import { HttpClient } from '@angular/common/http';
 export class AppComponent {
 
   readonly menus: Array<PoMenuItem> = [
-    { label: 'Home', link: '/profissional', shortLabel: 'Home', icon: 'po-icon-home' }
+    { label: 'Profissional', link: '/profissional', shortLabel: 'Profissional', icon: 'po-icon-users' },
+    { label: 'Paciente', link: '/paciente', shortLabel: 'Paciente', icon: 'po-icon-user' }
   ];
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {

@@ -1,0 +1,47 @@
+<po-page-edit
+    p-title="Novo Paciente">
+    <po-divider class="po-sm-12" p-label="Dados pessoais"></po-divider>
+    <po-input class="po-md-8"
+        name="nome"
+        [(ngModel)]="paciente.nome"
+        p-label="Nome">
+    </po-input>
+    <po-datepicker class="po-md-4"
+        name="data-nascimento"
+        p-label="Data de Nascimento"
+        [(ngModel)]="paciente.dataNascimento">
+    </po-datepicker>
+    <po-input class="po-md-4"
+        name="CPF"
+        [(ngModel)]="paciente.cpf"
+        p-label="CPF">
+    </po-input>
+    <po-email class="po-md-4"
+        name="email"
+        [(ngModel)]="paciente.email"
+        p-label="E-mail">
+    </po-email>
+    <po-input class="po-md-4"
+        name="telefone"
+        [(ngModel)]="paciente.telefone"
+        p-label="Telefone">
+    </po-input>
+    <po-divider class="po-sm-12" p-label="Dados convênio"></po-divider>
+    <po-switch class="po-md-4"
+        name="possui-convenio"
+        [(ngModel)]="paciente.possuiConvenio"
+        p-label-off="Não"
+        p-label-on="Sim"
+        p-label="Possui convenio">
+    </po-switch>
+    <po-input class="po-md-4"
+        name="nomeConvenio"
+        [(ngModel)]="paciente.nomeConvenio"
+        p-label="Nome convenio">
+    </po-input>
+    <po-input class="po-md-4"
+        name="numCarteirinha"
+        [(ngModel)]="paciente.numeroCarteirinha"
+        p-label="Número carteirinha">
+    </po-input>
+</po-page-edit>

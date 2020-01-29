@@ -43,20 +43,6 @@ export class ProfissionalListComponent implements OnInit {
       });
       this.loading = false;
     }, error => console.error(error));
-
-    var profissional = {
-      numeroCarteiraTrabalho:null,
-      crm:null,
-      tipo:0,
-      id:0,
-      nome:"Phillipe",
-      cpf:"090.593.666-38",
-      dataNascimento:"1989-12-25T00:00:00",
-      email:null,
-      telefone:null
-    };
-   //httpClient.post(baseUrl + 'api/profissional', profissional).subscribe(result => {
-    //}, error => console.error(error));
    }
 
   ngOnInit() {

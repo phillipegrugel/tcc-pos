@@ -11,6 +11,7 @@ import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { PoModule } from '@portinari/portinari-ui';
 import { ProfissionalModule } from './profissional/profissional.module'
+import { PacienteModule } from './paciente/paciente.module';
 
 @NgModule({
   declarations: [
@@ -25,11 +26,13 @@ import { ProfissionalModule } from './profissional/profissional.module'
     HttpClientModule,
     FormsModule,
     ProfissionalModule,
+    PacienteModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'profissional', loadChildren: './profissional/profissional.module#ProfissionalModule'}
+      { path: 'profissional', loadChildren: './profissional/profissional.module#ProfissionalModule'},
+      { path: 'paciente', loadChildren: './paciente/paciente.module#PacienteModule'}
     ]),
     PoModule,
     RouterModule.forRoot([])

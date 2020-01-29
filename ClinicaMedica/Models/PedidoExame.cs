@@ -9,6 +9,6 @@ namespace ClinicaMedica.Models
   {
     public int Id { get; set; }
     public Exame Exame { get; set; }
-    public Paciente Paciente { get; set; }
+    public PacienteModel Paciente { get; set; }
   }
 }
