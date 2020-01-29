@@ -26,9 +26,6 @@ import { RemedioModule } from './remedio/remedio.module';
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
-    ProfissionalModule,
-    PacienteModule,
-    RemedioModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
