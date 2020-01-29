@@ -17,5 +17,6 @@ namespace ClinicaMedica.Context
     public DbSet<Profissional> Profissionais { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
     public DbSet<Paciente> Pacientes { get; set; }
+    public DbSet<Remedio> Remedios { get; set; }
   }
 }

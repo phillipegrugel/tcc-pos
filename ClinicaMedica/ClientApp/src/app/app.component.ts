@@ -12,7 +12,8 @@ export class AppComponent {
 
   readonly menus: Array<PoMenuItem> = [
     { label: 'Profissional', link: '/profissional', shortLabel: 'Profissional', icon: 'po-icon-users' },
-    { label: 'Paciente', link: '/paciente', shortLabel: 'Paciente', icon: 'po-icon-user' }
+    { label: 'Paciente', link: '/paciente', shortLabel: 'Paciente', icon: 'po-icon-user' },
+    { label: 'Remedio', link: '/remedio', shortLabel: 'Remedio', icon: 'po-icon-server' }
   ];
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {

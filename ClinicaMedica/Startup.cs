@@ -52,6 +52,8 @@ namespace ClinicaMedica
       services.AddScoped<IPessoaRepository, PessoaRepository>();
       services.AddScoped<IPacienteService, PacienteService>();
       services.AddScoped<IPacienteRepository, PacienteRepository>();
+      services.AddScoped<IRemedioService, RemedioService>();
+      services.AddScoped<IRemedioRepository, RemedioRepository>();
 
       //var builder = new ContainerBuilder();
       //builder.Populate(services);

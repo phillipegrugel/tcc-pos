@@ -10,7 +10,7 @@ namespace ClinicaMedica.Models
     public int Id { get; set; }
     public Consulta Consulta { get; set; }
     public PedidoExame PedidoExame { get; set; }
-    public List<Remedio> Remedios { get; set; }
+    public List<RemedioModel> Remedios { get; set; }
     public string Observacao { get; set; }
   }
 }
