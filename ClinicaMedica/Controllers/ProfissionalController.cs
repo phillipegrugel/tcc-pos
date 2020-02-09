@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ClinicaMedica.Models;
+using ClinicaMedica.Models.Lookups;
 using ClinicaMedica.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,28 @@ namespace ClinicaMedica.Controllers
     public async Task<bool> Delete(int id)
     {
       return await _profissionalService.Delete(id);
+    }
+
+    [HttpGet("MedicoGetLookup")]
+    public async Task<ProfissionalLookup> MedicoGetLookup()
+    {
+      List<ProfissionalModel> listMedicos = await _profissionalService.BuscaMedicos();
+      return new ProfissionalLookup()
+      {
+        Items = listMedicos
+      };
+    }
+
+    [HttpPost("GetHorariosDisponiveisMedicos")]
+    public List<HorarioModel> GetHorariosDisponiveisMedico([FromBody]Params param)
+    {
+      return _profissionalService.BuscaHorariosDisponiveisMedico(param.idMedico, param.data);
+    }
+
+    public class Params
+    {
+      public int idMedico { get; set; }
+      public DateTime data { get; set; }
     }
   }
 }

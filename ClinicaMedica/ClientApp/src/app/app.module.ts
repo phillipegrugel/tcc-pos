@@ -30,9 +30,10 @@ import { RemedioModule } from './remedio/remedio.module';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'profissional', loadChildren: './profissional/profissional.module#ProfissionalModule'},
-      { path: 'paciente', loadChildren: './paciente/paciente.module#PacienteModule'},
-      { path: 'remedio', loadChildren: './remedio/remedio.module#RemedioModule'}
+      { path: 'profissional', loadChildren: './profissional/profissional.module#ProfissionalModule' },
+      { path: 'paciente', loadChildren: './paciente/paciente.module#PacienteModule' },
+      { path: 'remedio', loadChildren: './remedio/remedio.module#RemedioModule' },
+      { path: 'consulta', loadChildren: './consulta/consulta.module#ConsultaModule' }
     ]),
     PoModule,
     RouterModule.forRoot([])

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ClinicaMedica.Models;
+using ClinicaMedica.Models.Lookups;
 using ClinicaMedica.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,6 +47,16 @@ namespace ClinicaMedica.Controllers
     public async Task<bool> Delete(int id)
     {
       return await _pacienteService.Delete(id);
+    }
+
+    [HttpGet("GetLookup")]
+    public async Task<PacienteLookup> GetLookup()
+    {
+      List<PacienteModel> listPacienteModel = await _pacienteService.BuscaPacientes();
+      return new PacienteLookup()
+      {
+        Items = listPacienteModel
+      };
     }
   }
 }

@@ -14,7 +14,8 @@ export class AppComponent {
     { label: 'Home', link: '/', shortLabel: 'Home', icon: 'po-icon-home' },
     { label: 'Profissional', link: '/profissional', shortLabel: 'Profissional', icon: 'po-icon-users' },
     { label: 'Paciente', link: '/paciente', shortLabel: 'Paciente', icon: 'po-icon-user' },
-    { label: 'Remedio', link: '/remedio', shortLabel: 'Remedio', icon: 'po-icon-server' }
+    { label: 'Remedio', link: '/remedio', shortLabel: 'Remedio', icon: 'po-icon-server' },
+    { label: 'Consulta', link: '/consulta', shortLabel: 'Consulta', icon: 'po-icon-server' }
   ];
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {

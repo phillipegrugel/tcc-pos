@@ -4,14 +4,16 @@ using ClinicaMedica.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClinicaMedica.Migrations
 {
     [DbContext(typeof(BaseContext))]
-    partial class BaseContextModelSnapshot : ModelSnapshot
+    [Migration("20200201181603_Consulta")]
+    partial class Consulta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,14 +28,11 @@ namespace ClinicaMedica.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("Data")
+                    b.Property<DateTime>("DiaHora")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("Excluido")
                         .HasColumnType("bit");
-
-                    b.Property<int>("Horario")
-                        .HasColumnType("int");
 
                     b.Property<int>("PacienteId")
                         .HasColumnType("int");

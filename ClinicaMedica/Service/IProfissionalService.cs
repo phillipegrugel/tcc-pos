@@ -13,5 +13,7 @@ namespace ClinicaMedica.Service
     Task<ProfissionalModel> BuscaProfissional(int id);
     Task<bool> UpdateProfissional(ProfissionalModel profissionalModel);
     Task<bool> Delete(int id);
+    Task<List<ProfissionalModel>> BuscaMedicos();
+    List<HorarioModel> BuscaHorariosDisponiveisMedico(int idMedico, DateTime data);
   }
 }

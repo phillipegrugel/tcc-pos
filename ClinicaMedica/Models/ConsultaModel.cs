@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 
 namespace ClinicaMedica.Models
 {
-  public class Consulta
+  public class ConsultaModel
   {
     public int Id { get; set; }
     public PacienteModel Paciente { get; set; }
     public ProfissionalModel Medico { get; set; }
-    public DateTime DiaHora { get; set; }
+    public DateTime Data { get; set; }
+    public HorarioModel Horario { get; set; }
   }
 }

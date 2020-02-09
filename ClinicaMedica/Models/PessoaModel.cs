@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ClinicaMedica.Models
 {
-  public class PessoaModel
+  public class PessoaModel : BaseModel
   {
     public int IdPessoa { get; set; }
     public string Nome { get; set; }

@@ -1,0 +1,45 @@
+<po-page-edit
+    p-title="Nova consulta">
+    <po-loading-overlay
+      [hidden]="carregandoHorarios"
+      p-text="Carregando horários disponíveis" >
+    </po-loading-overlay>
+    <po-lookup
+      class="po-md-6"
+      name="paciente"
+      [(ngModel)]="consulta.paciente.id"
+      p-field-label="nome"
+      p-field-value="id"
+      p-label="Paciente"
+      [p-columns]="columns"
+      [p-field-format]="fieldFormat"
+      [p-filter-service]="service"
+      [p-literals]="{'modalTitle' : 'Pacientes'}">
+    </po-lookup>
+    <po-lookup
+      class="po-md-6"
+      name="medico"
+      [(ngModel)]="consulta.medico.id"
+      p-field-label="nome"
+      p-field-value="id"
+      p-label="Médico"
+      [p-columns]="columns"
+      [p-field-format]="fieldFormat"
+      [p-filter-service]="serviceMedico"
+      [p-literals]="{'modalTitle' : 'Médicos'}"
+      (p-selected)="carregaHorarios()">
+    </po-lookup>
+    <po-datepicker class="po-md-6"
+        name="data-consulta"
+        p-label="Data"
+        [(ngModel)]="consulta.data"
+        (p-change)="carregaHorarios()">
+    </po-datepicker>
+    <po-select class="po-md-6"
+        name="horario"
+        [p-options]="horariosOptions"
+        [(ngModel)]="consulta.horario"
+        [p-disabled]="horariosHabilitados"
+        p-label="Horario">
+    </po-select>
+</po-page-edit>

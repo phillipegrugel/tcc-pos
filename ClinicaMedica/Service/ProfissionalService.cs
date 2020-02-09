@@ -126,6 +126,28 @@ namespace ClinicaMedica.Service
       }
     }
 
+    public async Task<List<ProfissionalModel>> BuscaMedicos()
+    {
+      try
+      {
+        List<Profissional> profissionaisEntities = _baseContext.Profissionais.Where(p => p.Excluido == false && p.Tipo == TipoProfissional.Medico).ToList();
+        List<ProfissionalModel> listProfissionalModel = new List<ProfissionalModel>();
+        foreach (Profissional profissional in profissionaisEntities)
+        {
+          profissional.Pessoa = _baseContext.Pessoas.Find(profissional.PessoaId);
+          profissional.Usuario = _baseContext.Usuarios.Find(profissional.UsuarioId);
+          listProfissionalModel.Add(await ProfissionalModelByProfissional(profissional));
+        }
+
+        return listProfissionalModel;
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine(e.Message);
+        return new List<ProfissionalModel>();
+      }
+    }
+
     public async Task<ProfissionalModel> BuscaProfissional(int id)
     {
       try
@@ -190,6 +212,37 @@ namespace ClinicaMedica.Service
           Senha = profissionalModel.Usuario.Senha
         }
       };
+    }
+
+    public List<HorarioModel> BuscaHorariosDisponiveisMedico(int idMedico, DateTime data)
+    {
+      Profissional profissional = _baseContext.Profissionais.SingleOrDefault<Profissional>(p => p.Id == idMedico && p.Excluido == false);
+      List<HorarioModel> horariosDisponiveis = new List<HorarioModel>();
+      foreach (HorarioModel horario in TodosHorarios())
+      {
+        Consulta consulta = _baseContext.Consultas.SingleOrDefault<Consulta>(c => c.Excluido == false && c.ProfissionalId == idMedico && c.Data == data && c.Horario == horario.Value);
+        if (consulta == null)
+          horariosDisponiveis.Add(horario);
+      }
+
+      return horariosDisponiveis;
+    }
+
+    public List<HorarioModel> TodosHorarios()
+    {
+      List<HorarioModel> listaHorarios = new List<HorarioModel>();
+      listaHorarios.Add(new HorarioModel() { Value = 0, Label = "08:00" });
+      listaHorarios.Add(new HorarioModel() { Value = 1, Label = "09:00" });
+      listaHorarios.Add(new HorarioModel() { Value = 2, Label = "10:00" });
+      listaHorarios.Add(new HorarioModel() { Value = 3, Label = "11:00" });
+      listaHorarios.Add(new HorarioModel() { Value = 4, Label = "12:00" });
+      listaHorarios.Add(new HorarioModel() { Value = 5, Label = "13:00" });
+      listaHorarios.Add(new HorarioModel() { Value = 6, Label = "14:00" });
+      listaHorarios.Add(new HorarioModel() { Value = 7, Label = "15:00" });
+      listaHorarios.Add(new HorarioModel() { Value = 8, Label = "16:00" });
+      listaHorarios.Add(new HorarioModel() { Value = 9, Label = "17:00" });
+
+      return listaHorarios;
     }
   }
 }
