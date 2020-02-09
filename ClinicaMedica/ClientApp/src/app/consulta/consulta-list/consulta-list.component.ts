@@ -25,7 +25,7 @@ export class ConsultaListComponent implements OnInit {
   ];
 
   public readonly tableActions: Array<PoTableAction> = [
-    { action: this.onRemoveConsulta.bind(this), label: 'Remover', type: 'danger', separator: true }
+    { action: this.onRemoveConsulta.bind(this), label: 'Cancelar', type: 'danger', separator: true }
   ];
 
   constructor(private httpClient: HttpClient, @Inject('BASE_URL') private baseUrl: string, private router: Router,
