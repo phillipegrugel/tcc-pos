@@ -18,8 +18,9 @@ export class AppComponent {
     { label: 'Profissional', link: '/profissional', shortLabel: 'Profissional', icon: 'po-icon-users' },
     { label: 'Paciente', link: '/paciente', shortLabel: 'Paciente', icon: 'po-icon-user' },
     { label: 'Remedio', link: '/remedio', shortLabel: 'Remedio', icon: 'po-icon-server' },
-    { label: 'Consulta', link: '/consulta', shortLabel: 'Consulta', icon: 'po-icon-server' },
-    { label: 'Exame', link: '/exame', shortLabel: 'Exame', icon: 'po-icon-server' }
+    { label: 'Consulta', link: '/consulta', shortLabel: 'Consulta', icon: 'po-icon-clock' },
+    { label: 'Exame', link: '/exame', shortLabel: 'Exame', icon: 'po-icon-exam' },
+    { label: 'Consulta rápida', link: '/consulta-rapida', shortLabel: 'Rápida', icon: 'po-icon-change' }
   ];
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string,private authService: AuthService) {

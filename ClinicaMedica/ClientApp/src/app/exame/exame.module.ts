@@ -6,11 +6,12 @@ import { PoModule } from '@portinari/portinari-ui';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../shared/auth.interceptor';
 import { FormsModule } from '@angular/forms';
+import { ExameResultadoComponent } from './exame-resultado/exame-resultado.component';
 
 
 
 @NgModule({
-  declarations: [ExameListComponent],
+  declarations: [ExameListComponent, ExameResultadoComponent],
   imports: [
     CommonModule,
     PoModule,

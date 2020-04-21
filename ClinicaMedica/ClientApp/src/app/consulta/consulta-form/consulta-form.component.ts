@@ -103,9 +103,7 @@ export class ConsultaFormComponent implements OnInit {
    }
 
   ngOnInit() {
-    debugger;
     this.paramsSub = this.route.params.subscribe(params => {
-      debugger;
       if (params['id']) {
         this.isNewConsulta = false;
         this.loadData(params['id']);
@@ -122,7 +120,6 @@ export class ConsultaFormComponent implements OnInit {
 
   save() {
     if (this.isNewConsulta) {
-      debugger;
       this.horariosOptions.forEach(horario => {
         if (horario.value == this.consulta.horario)
           this.consulta.horario = horario;

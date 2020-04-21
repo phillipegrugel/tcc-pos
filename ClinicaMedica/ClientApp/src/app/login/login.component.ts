@@ -25,12 +25,10 @@ export class LoginComponent implements OnInit {
   }
 
   async onCheckLogin(formData: any) {
-    debugger;
     this.httpClient.post(this.baseURL + 'api/user/login', { login: formData.login, senha: formData.password})
     .toPromise()
     .then((result: any) => {
         if (result.token) {
-          debugger;
           //this.updateUserNameStorage(objLogin.userName, objLogin.rememberUser);
           this.authService.setSession(result);
           this.router.navigate([''])

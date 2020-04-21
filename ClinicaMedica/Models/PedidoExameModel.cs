@@ -8,7 +8,6 @@ namespace ClinicaMedica.Models
   public class PedidoExameModel
   {
     public int Id { get; set; }
-    public ConsultaModel Consulta { get; set; }
     public ExameModel Exame { get; set; }
     public HistoricoClinicoModel HistoricoClinico { get; set; }
     public string Resultado { get; set; }

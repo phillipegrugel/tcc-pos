@@ -77,7 +77,6 @@ export class ConsultaExecuteComponent implements OnInit {
       observacoes: this.observacoesRemedioLookup,
       receita: null
     }
-    debugger;
     this.consulta.historicoClinico.receita.remedios.push(remedioReceita);
     this.remedioLookup = {};
     this.remedioLookupId = null;

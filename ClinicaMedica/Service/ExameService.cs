@@ -93,7 +93,22 @@ namespace ClinicaMedica.Service
                 Exame = exameModel
             };
 
-            pedidoExameModel.HistoricoClinico = _consultaService.GetHistoricoClinico(pedidoExame.HistoricoClinicoId, true);
+            HistoricoClinico historicoClinico = _baseContext.HistoricosClinicos.FirstOrDefault(h => h.Id == pedidoExame.HistoricoClinicoId);
+            Consulta consulta = _baseContext.Consultas.FirstOrDefault(c => c.Id == historicoClinico.ConsultaId);
+            Paciente paciente = _baseContext.Pacientes.FirstOrDefault(p => p.Id == consulta.PacienteId);
+            Pessoa pessoa = _baseContext.Pessoas.FirstOrDefault(p => p.Id == paciente.PessoaId);
+
+            pedidoExameModel.HistoricoClinico = new HistoricoClinicoModel
+            {
+                Id = historicoClinico.Id,
+                Consulta = new ConsultaModel
+                {
+                    Paciente = new PacienteModel
+                    {
+                        Nome = pessoa.Nome
+                    }
+                }
+            };
 
             return pedidoExameModel;
         }
@@ -112,7 +127,7 @@ namespace ClinicaMedica.Service
             try
             {
                 PedidoExame pedidoExame = GetPedidoExameByModel(pedidoExameModel);
-                _baseContext.PedidosExames.Add(pedidoExame);
+                _baseContext.PedidosExames.Update(pedidoExame);
                 _baseContext.SaveChanges();
                 return true;
             }
@@ -132,6 +147,20 @@ namespace ClinicaMedica.Service
                 HistoricoClinicoId = pedidoExameModel.HistoricoClinico.Id,
                 Resultado = pedidoExameModel.Resultado
             };
+        }
+
+        public async Task<PedidoExameModel> BuscaExamePendente(int id)
+        {
+            try
+            {
+                PedidoExame pedidoExame = _baseContext.PedidosExames.FirstOrDefault(p => p.Id == id);
+                PedidoExameModel pedidoExameModel = PedidoExameModelByPedidoExame(pedidoExame);
+                return pedidoExameModel;
+            }
+            catch
+            {
+                throw new Exception("Error");
+            }
         }
     }
 }

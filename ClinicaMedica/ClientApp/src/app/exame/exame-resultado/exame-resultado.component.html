@@ -1,0 +1,15 @@
+<po-page-edit
+    [(p-title)]="titulo"
+    (p-cancel)="cancel()"
+    (p-save)="save()">
+    <po-textarea
+        p-label="Resultado:"
+        [(ngModel)]="exame.resultado">
+    </po-textarea>
+    <po-switch
+        p-label="Entregue ao paciente?"
+        p-label-off="Não"
+        p-label-on="Sim" 
+        [(ngModel)]="exame.entreguePaciente">
+    </po-switch>
+</po-page-edit>

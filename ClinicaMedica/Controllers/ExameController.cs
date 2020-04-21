@@ -46,7 +46,14 @@ namespace ClinicaMedica.Controllers
             return _exameService.BuscaExamesPendentes();
         }
 
-        [HttpPost]
+        [HttpGet("GetExamePendente/{id}", Name = "GetExamePendente")]
+        [Authorize]
+        public async Task<PedidoExameModel> GetExamePendente(int id)
+        {
+            return await _exameService.BuscaExamePendente(id);
+        }
+
+        [HttpPost("SalvaResultadoExame")]
         [Authorize]
         public async Task<bool> SalvaResultadoExame(PedidoExameModel pedidoExame)
         {
