@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ClinicaMedica.Models;
 using ClinicaMedica.Models.Lookups;
 using ClinicaMedica.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,12 +22,14 @@ namespace ClinicaMedica.Controllers
     }
 
     [HttpGet]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<IEnumerable<ProfissionalModel>> Get()
     {
       return await _profissionalService.BuscaProfissionais();
     }
 
     [HttpGet("{id}", Name = "Profissional")]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<ProfissionalModel> Get(int id)
     {
       //return await _profissionalService.BuscaProfissional(id);
@@ -35,24 +38,28 @@ namespace ClinicaMedica.Controllers
     }
 
     [HttpPost]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<bool> Post(ProfissionalModel profissional)
     {
       return await _profissionalService.CreateProfissional(profissional);
     }
 
     [HttpPut]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<bool> Put(ProfissionalModel profissional)
     {
       return await _profissionalService.UpdateProfissional(profissional);
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<bool> Delete(int id)
     {
       return await _profissionalService.Delete(id);
     }
 
     [HttpGet("MedicoGetLookup")]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<ProfissionalLookup> MedicoGetLookup()
     {
       List<ProfissionalModel> listMedicos = await _profissionalService.BuscaMedicos();
@@ -63,6 +70,7 @@ namespace ClinicaMedica.Controllers
     }
 
     [HttpPost("GetHorariosDisponiveisMedicos")]
+    [Authorize(Roles = "medico,secretaria")]
     public List<HorarioModel> GetHorariosDisponiveisMedico([FromBody]Params param)
     {
       return _profissionalService.BuscaHorariosDisponiveisMedico(param.idMedico, param.data);

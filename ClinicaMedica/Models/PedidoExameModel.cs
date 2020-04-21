@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 
 namespace ClinicaMedica.Models
 {
-  public class HistoricoClinico
+  public class PedidoExameModel
   {
     public int Id { get; set; }
     public ConsultaModel Consulta { get; set; }
-    public PedidoExame PedidoExame { get; set; }
-    public List<RemedioModel> Remedios { get; set; }
-    public string Observacao { get; set; }
+    public ExameModel Exame { get; set; }
+    public HistoricoClinicoModel HistoricoClinico { get; set; }
+    public string Resultado { get; set; }
+    public bool EntreguePaciente { get; set; }
   }
 }

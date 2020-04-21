@@ -1,0 +1,116 @@
+<po-page-detail
+    p-title="Executar consulta">
+    <div class="po-row">
+        <po-info
+          class="po-md-4"
+          p-label="Data:"
+          [p-value]="consulta.data | date: 'dd/MM/yyyy'">
+        </po-info>
+    
+        <po-info
+          class="po-md-4"
+          p-label="Paciente:"
+          [p-value]="consulta.paciente.nome">
+        </po-info>
+  
+        <po-info
+          class="po-md-4"
+          p-label="Horario:"
+          [p-value]="consulta.horario.label">
+        </po-info>
+    </div>
+    <po-divider class="po-sm-12" p-label="Receita"></po-divider>
+    <div class="po-row" *ngFor="let remedioReceita of consulta.historicoClinico.receita.remedios">
+      <po-info
+        class="po-md-4"
+        [p-value]="remedioReceita.remedio.nome">
+      </po-info>
+      <po-info
+        class="po-md-4"
+        [p-value]="remedioReceita.observacoes">
+      </po-info>
+      <po-button
+        p-label="Remover"
+        p-type="danger"
+        (p-click)="removerRemedio(remedioReceita)">
+      </po-button>
+    </div>
+    <po-button
+      p-label="Adicionar remédio"
+      p-type="primary"
+      (p-click)="modalRemedio.open()()">
+    </po-button>
+    <po-divider class="po-sm-12" p-label="Exames"></po-divider>
+    <br>
+    <div class="po-row" *ngFor="let examesSolicitados of consulta.historicoClinico.exames">
+      <po-info
+        class="po-md-8"
+        [p-value]="examesSolicitados.exame.nome">
+      </po-info>
+      <po-button
+        p-label="Remover"
+        p-type="danger"
+        (p-click)="removerExame(examesSolicitados)">
+      </po-button>
+    </div>
+    <po-button
+      p-label="Adicionar exame"
+      p-type="primary"
+      (p-click)="modalExame.open()()">
+    </po-button>
+    <div class="po-row">
+      <po-textarea
+          class="po-md-12"
+          p-label="Observações:"
+          [(ngModel)]="consulta.historicoClinico.observacao" >
+      </po-textarea>
+    </div>
+    <div class="po-row">
+      <div class="po-md-8"></div>
+      <po-button
+        p-label="Salvar"
+        p-type="primary"
+        (p-click)="salvar()">
+      </po-button>
+    </div>
+</po-page-detail>
+
+<po-modal #modalRemedio
+    [p-primary-action]="confirm"
+    p-title="Adicionar remédio" >
+    <po-lookup
+      class="po-md-12"
+      name="remedio"
+      [(ngModel)]="remedioLookupId"
+      p-field-label="nome"
+      p-field-value="id"
+      p-label="Remédio"
+      [p-columns]="columns"
+      [p-field-format]="fieldFormat"
+      [p-filter-service]="remedioService"
+      [p-literals]="{'modalTitle' : 'Remédios'}"
+      (p-selected)="adicionaRemedio(this)">
+    </po-lookup>
+    <po-textarea
+        class="po-md-12"
+        p-label="Observações:"
+        [(ngModel)]="observacoesRemedioLookup" >
+    </po-textarea>
+</po-modal>
+
+<po-modal #modalExame
+    p-title="Adicionar exame" >
+    <po-lookup
+      class="po-md-12"
+      name="exame"
+      [(ngModel)]="exameLookupId"
+      p-field-label="nome"
+      p-field-value="id"
+      p-label="Exame"
+      [p-columns]="columns"
+      [p-field-format]="fieldFormat"
+      [p-filter-service]="exameService"
+      [p-literals]="{'modalTitle' : 'Exames'}"
+      (p-selected)="adicionaExames()">
+    </po-lookup>
+</po-modal>

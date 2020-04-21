@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ClinicaMedica.Models;
 using ClinicaMedica.Models.Lookups;
 using ClinicaMedica.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaMedica.Controllers
@@ -20,36 +21,42 @@ namespace ClinicaMedica.Controllers
     }
 
     [HttpGet]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<IEnumerable<PacienteModel>> Get()
     {
       return await _pacienteService.BuscaPacientes();
     }
 
     [HttpGet("{id}", Name = "Pacientes")]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<PacienteModel> Get(int id)
     {
       return await _pacienteService.BuscaPaciente(id);
     }
 
     [HttpPost]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<bool> Post(PacienteModel paciente)
     {
       return await _pacienteService.CreatePaciente(paciente);
     }
 
     [HttpPut]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<bool> Put(PacienteModel paciente)
     {
       return await _pacienteService.UpdatePaciente(paciente);
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<bool> Delete(int id)
     {
       return await _pacienteService.Delete(id);
     }
 
     [HttpGet("GetLookup")]
+    [Authorize(Roles = "medico,secretaria")]
     public async Task<PacienteLookup> GetLookup()
     {
       List<PacienteModel> listPacienteModel = await _pacienteService.BuscaPacientes();

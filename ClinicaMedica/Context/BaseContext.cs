@@ -19,5 +19,10 @@ namespace ClinicaMedica.Context
     public DbSet<Paciente> Pacientes { get; set; }
     public DbSet<Remedio> Remedios { get; set; }
     public DbSet<Consulta> Consultas { get; set; }
+    public DbSet<Receita> Receitas { get; set; }
+    public DbSet<RemedioReceita> RemedioReceitas { get; set; }
+    public DbSet<Exame> Exames { get; set; }
+    public DbSet<PedidoExame> PedidosExames { get; set; }
+    public DbSet<HistoricoClinico> HistoricosClinicos { get; set; }
   }
 }

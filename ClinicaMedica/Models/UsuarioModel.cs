@@ -12,5 +12,6 @@ namespace ClinicaMedica.Models
     public string Senha { get; set; }
     public string ConfirmarSenha { get; set; }
     public ProfissionalModel Profissional { get; set; }
+    public string Role { get; set; }
   }
 }

@@ -1,4 +1,7 @@
-<div class="po-wrapper">
+<div *ngIf="!isLogged()">
+  <app-login></app-login>
+</div>
+<div class="po-wrapper" *ngIf="isLogged()">
   <po-toolbar p-title="Grugel Clínica médica"></po-toolbar>
 
   <po-menu p-collapsed="true" [p-menus]="menus"></po-menu>

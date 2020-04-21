@@ -8,6 +8,8 @@ import { RemedioFormComponent } from './remedio-form/remedio-form.component';
 import { PoModule } from '@portinari/portinari-ui';
 import { PoFieldModule } from '@portinari/portinari-ui';
 import { FormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '../shared/auth.interceptor';
 
 
 @NgModule({
@@ -18,6 +20,13 @@ import { FormsModule } from '@angular/forms';
     PoModule,
     FormsModule,
     PoFieldModule
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    }
   ]
 })
 export class RemedioModule { }

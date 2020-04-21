@@ -8,7 +8,7 @@ namespace ClinicaMedica.Models
   public class ResultadoExame
   {
     public int Id { get; set; }
-    public PedidoExame PedidoExame { get; set; }
+    public PedidoExameModel PedidoExame { get; set; }
     public string Resultado { get; set; }
   }
 }

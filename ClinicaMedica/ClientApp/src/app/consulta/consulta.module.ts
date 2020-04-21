@@ -7,11 +7,16 @@ import { FormsModule } from '@angular/forms';
 import { ConsultaFormComponent } from './consulta-form/consulta-form.component';
 import { PacienteLookupService } from '../shared/paciente-lookup.service';
 import { MedicoLookupService } from '../shared/medico-lookup.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '../shared/auth.interceptor';
+import { ConsultaExecuteComponent } from './consulta-execute/consulta-execute.component';
+import { RemedioLookupService } from '../shared/remedio-lookup.service';
+import { ExameLookupService } from '../shared/exame-lookup.service';
 
 
 
 @NgModule({
-  declarations: [ConsultaListComponent, ConsultaFormComponent],
+  declarations: [ConsultaListComponent, ConsultaFormComponent, ConsultaExecuteComponent],
   imports: [
     CommonModule,
     ConsultaRoutingModule,
@@ -21,7 +26,14 @@ import { MedicoLookupService } from '../shared/medico-lookup.service';
   ],
   providers: [
     PacienteLookupService,
-    MedicoLookupService
+    RemedioLookupService,
+    ExameLookupService,
+    MedicoLookupService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    }
   ]
 })
 export class ConsultaModule { }

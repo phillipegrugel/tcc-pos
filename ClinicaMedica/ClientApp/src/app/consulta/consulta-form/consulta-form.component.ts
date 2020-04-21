@@ -87,7 +87,8 @@ export class ConsultaFormComponent implements OnInit {
     horario: {
       label: '',
       value: 0
-    }
+    },
+    historicoClinico: {}
   };
   private paramsSub: Subscription;
   private baseURL: string;

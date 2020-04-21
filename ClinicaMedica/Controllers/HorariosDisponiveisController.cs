@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ClinicaMedica.Models;
 using ClinicaMedica.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,7 @@ namespace ClinicaMedica.Controllers
     }
 
     [HttpPost]
+    [Authorize(Roles = "medico,secretaria")]
     public List<HorarioModel> Post(Params param)
     {
       return _profissionalService.BuscaHorariosDisponiveisMedico(param.idMedico, param.data);

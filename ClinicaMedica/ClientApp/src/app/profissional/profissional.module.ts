@@ -7,6 +7,8 @@ import { PoModule } from '@portinari/portinari-ui';
 import { ProfissionalFormComponent } from './profissional-form/profissional-form.component';
 import { PoFieldModule } from '@portinari/portinari-ui';
 import { FormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '../shared/auth.interceptor';
 
 
 @NgModule({
@@ -23,6 +25,13 @@ import { FormsModule } from '@angular/forms';
   ],
   bootstrap: [
     ProfissionalListComponent
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    }
   ]
 })
 export class ProfissionalModule { }

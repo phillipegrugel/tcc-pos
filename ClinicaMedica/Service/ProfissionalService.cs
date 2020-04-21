@@ -22,29 +22,12 @@ namespace ClinicaMedica.Service
       _baseContext = baseContext;
     }
 
-    public static string GerarHashMd5(string input)
-    {
-      MD5 md5Hash = MD5.Create();
-      // Converter a String para array de bytes, que é como a biblioteca trabalha.
-      byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-
-      // Cria-se um StringBuilder para recompôr a string.
-      StringBuilder sBuilder = new StringBuilder();
-
-      // Loop para formatar cada byte como uma String em hexadecimal
-      for (int i = 0; i < data.Length; i++)
-      {
-        sBuilder.Append(data[i].ToString("x2"));
-      }
-
-      return sBuilder.ToString();
-    }
     public async Task<bool> CreateProfissional(ProfissionalModel profissionalModel)
     {
       if (profissionalModel.Usuario.Senha != profissionalModel.Usuario.ConfirmarSenha)
         throw new Exception("Senhas diferentes");
 
-      profissionalModel.Usuario.Senha = GerarHashMd5(profissionalModel.Usuario.Senha);
+      profissionalModel.Usuario.Senha = UtilService.GerarHashMd5(profissionalModel.Usuario.Senha);
 
       Profissional profissional = ProfissionalByProfissionalModel(profissionalModel);
       

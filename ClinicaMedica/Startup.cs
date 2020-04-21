@@ -4,6 +4,7 @@ using ClinicaMedica.Context;
 using ClinicaMedica.Repositories;
 using ClinicaMedica.Service;
 using ClinicaMedica.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,8 +13,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Reflection;
+using System.Text;
 
 namespace ClinicaMedica
 {
@@ -29,6 +32,8 @@ namespace ClinicaMedica
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      services.AddCors();
+
       services.AddControllersWithViews();
       // In production, the Angular files will be served from this directory
       services.AddSpaStaticFiles(configuration =>
@@ -56,6 +61,34 @@ namespace ClinicaMedica
       services.AddScoped<IRemedioRepository, RemedioRepository>();
       services.AddScoped<IConsultaService, ConsultaService>();
       services.AddScoped<IConsultaRepository, ConsultaRepository>();
+      services.AddScoped<IUsuarioService, UsuarioService>();
+      services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+      services.AddScoped<IExameRepository, ExameRepository>();
+      services.AddScoped<IPedidoExameRepostitory, PedidoExameRepository>();
+      services.AddScoped<IRemedioRepository, RemedioRepository>();
+      services.AddScoped<IReceitaRepository, ReceitaRepository>();
+      services.AddScoped<IRemedioReceitaRepository, RemedioReceitaRepository>();
+      services.AddScoped<IHistoricoClinicoRepository, HistoricoClinicoRepository>();
+      services.AddScoped<IExameService, ExameService>();
+
+        var key = Encoding.ASCII.GetBytes(Settings.Secret);
+        services.AddAuthentication(x =>
+        {
+            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(x =>
+        {
+            x.RequireHttpsMetadata = false;
+            x.SaveToken = true;
+            x.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+        });
 
       //var builder = new ContainerBuilder();
       //builder.Populate(services);
@@ -93,7 +126,15 @@ namespace ClinicaMedica
 
       app.UseRouting();
 
-      app.UseEndpoints(endpoints =>
+      app.UseCors(x => x
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader());
+
+      app.UseAuthentication();
+      app.UseAuthorization();
+
+     app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllerRoute(
                   name: "default",

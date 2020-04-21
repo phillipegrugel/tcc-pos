@@ -13,6 +13,10 @@ import { PoModule } from '@portinari/portinari-ui';
 import { ProfissionalModule } from './profissional/profissional.module'
 import { PacienteModule } from './paciente/paciente.module';
 import { RemedioModule } from './remedio/remedio.module';
+import { LoginModule } from './login/login.module';
+import { AuthGuard } from './shared/auth.guard';
+import { AuthInterceptor } from './shared/auth.interceptor';
+import { AuthService } from './shared/auth.service';
 
 @NgModule({
   declarations: [
@@ -26,19 +30,29 @@ import { RemedioModule } from './remedio/remedio.module';
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    LoginModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'profissional', loadChildren: './profissional/profissional.module#ProfissionalModule' },
-      { path: 'paciente', loadChildren: './paciente/paciente.module#PacienteModule' },
-      { path: 'remedio', loadChildren: './remedio/remedio.module#RemedioModule' },
-      { path: 'consulta', loadChildren: './consulta/consulta.module#ConsultaModule' }
+      { path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AuthGuard] },
+      { path: 'counter', component: CounterComponent, canActivate: [AuthGuard] },
+      { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthGuard] },
+      { path: 'profissional', loadChildren: './profissional/profissional.module#ProfissionalModule', canActivate: [AuthGuard] },
+      { path: 'paciente', loadChildren: './paciente/paciente.module#PacienteModule', canActivate: [AuthGuard] },
+      { path: 'remedio', loadChildren: './remedio/remedio.module#RemedioModule', canActivate: [AuthGuard] },
+      { path: 'consulta', loadChildren: './consulta/consulta.module#ConsultaModule', canActivate: [AuthGuard] },
+      { path: 'exame', loadChildren: './exame/exame.module#ExameModule', canActivate: [AuthGuard] }
     ]),
     PoModule,
     RouterModule.forRoot([])
   ],
-  providers: [],
+  providers: [
+    AuthService,
+    AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -12,5 +12,6 @@ namespace ClinicaMedica.Models
     public ProfissionalModel Medico { get; set; }
     public DateTime Data { get; set; }
     public HorarioModel Horario { get; set; }
+    public HistoricoClinicoModel HistoricoClinico { get; set; }
   }
 }

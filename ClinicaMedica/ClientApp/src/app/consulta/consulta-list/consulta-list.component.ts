@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class ConsultaListComponent implements OnInit {
 
   public consultas: ConsultaModel[];
+  public isMedico: boolean = false;
   public columns: PoTableColumn[] = [
     { property: 'id' },
     { property: 'data', label: 'Data', type: 'date' },
@@ -24,7 +25,7 @@ export class ConsultaListComponent implements OnInit {
     { action: this.onNewConsulta.bind(this), label: 'Cadastrar', icon: 'po-icon-user-add' }
   ];
 
-  public readonly tableActions: Array<PoTableAction> = [
+  public tableActions: Array<PoTableAction> = [
     { action: this.onRemoveConsulta.bind(this), label: 'Cancelar', type: 'danger', separator: true }
   ];
 
@@ -39,10 +40,26 @@ export class ConsultaListComponent implements OnInit {
       });
       this.loading = false;
     }, error => console.error(error));
+
+    this.httpClient.get<boolean>(this.baseUrl + 'api/user/isMedico').subscribe(result => {
+      this.isMedico = result;
+      if(result) {
+        this.tableActions.push({
+          action: this.onExecuteConsulta.bind(this),
+          label: 'Executar',
+          type: 'danger',
+          separator: true
+        });
+      }
+    }, error => console.error(error));
    }
 
 
   ngOnInit() {
+  }
+
+  public onExecuteConsulta(consulta) {
+    this.router.navigateByUrl(`/consulta/execute/${consulta.id}`);
   }
 
   private onEditConsulta(consulta) {

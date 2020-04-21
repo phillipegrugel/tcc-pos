@@ -50,6 +50,41 @@ namespace ClinicaMedica.Migrations
                     b.ToTable("Consultas");
                 });
 
+            modelBuilder.Entity("ClinicaMedica.Entities.Exame", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Exames");
+                });
+
+            modelBuilder.Entity("ClinicaMedica.Entities.HistoricoClinico", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ConsultaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Observacoes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsultaId");
+
+                    b.ToTable("HistoricosClinicos");
+                });
+
             modelBuilder.Entity("ClinicaMedica.Entities.Paciente", b =>
                 {
                     b.Property<int>("Id")
@@ -77,6 +112,34 @@ namespace ClinicaMedica.Migrations
                     b.HasIndex("PessoaId");
 
                     b.ToTable("Pacientes");
+                });
+
+            modelBuilder.Entity("ClinicaMedica.Entities.PedidoExame", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("EntreguePaciente")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ExameId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HistoricoClinicoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Resultado")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExameId");
+
+                    b.HasIndex("HistoricoClinicoId");
+
+                    b.ToTable("PedidosExames");
                 });
 
             modelBuilder.Entity("ClinicaMedica.Entities.Pessoa", b =>
@@ -143,6 +206,27 @@ namespace ClinicaMedica.Migrations
                     b.ToTable("Profissionais");
                 });
 
+            modelBuilder.Entity("ClinicaMedica.Entities.Receita", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("HistoricoClinicoId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Observacoes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HistoricoClinicoId")
+                        .IsUnique();
+
+                    b.ToTable("Receitas");
+                });
+
             modelBuilder.Entity("ClinicaMedica.Entities.Remedio", b =>
                 {
                     b.Property<int>("Id")
@@ -167,6 +251,31 @@ namespace ClinicaMedica.Migrations
                     b.ToTable("Remedios");
                 });
 
+            modelBuilder.Entity("ClinicaMedica.Entities.RemedioReceita", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Observacoes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReceitaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RemedioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceitaId");
+
+                    b.HasIndex("RemedioId");
+
+                    b.ToTable("RemedioReceitas");
+                });
+
             modelBuilder.Entity("ClinicaMedica.Entities.Usuario", b =>
                 {
                     b.Property<int>("Id")
@@ -178,6 +287,9 @@ namespace ClinicaMedica.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Login")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Senha")
@@ -203,11 +315,35 @@ namespace ClinicaMedica.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ClinicaMedica.Entities.HistoricoClinico", b =>
+                {
+                    b.HasOne("ClinicaMedica.Entities.Consulta", "Consulta")
+                        .WithMany()
+                        .HasForeignKey("ConsultaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ClinicaMedica.Entities.Paciente", b =>
                 {
                     b.HasOne("ClinicaMedica.Entities.Pessoa", "Pessoa")
                         .WithMany()
                         .HasForeignKey("PessoaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ClinicaMedica.Entities.PedidoExame", b =>
+                {
+                    b.HasOne("ClinicaMedica.Entities.Exame", "Exame")
+                        .WithMany()
+                        .HasForeignKey("ExameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClinicaMedica.Entities.HistoricoClinico", "HistoricoClinico")
+                        .WithMany("Exames")
+                        .HasForeignKey("HistoricoClinicoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -223,6 +359,30 @@ namespace ClinicaMedica.Migrations
                     b.HasOne("ClinicaMedica.Entities.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ClinicaMedica.Entities.Receita", b =>
+                {
+                    b.HasOne("ClinicaMedica.Entities.HistoricoClinico", "HistoricoClinico")
+                        .WithOne("Receita")
+                        .HasForeignKey("ClinicaMedica.Entities.Receita", "HistoricoClinicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ClinicaMedica.Entities.RemedioReceita", b =>
+                {
+                    b.HasOne("ClinicaMedica.Entities.Receita", "Receita")
+                        .WithMany("remedios")
+                        .HasForeignKey("ReceitaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClinicaMedica.Entities.Remedio", "Remedio")
+                        .WithMany()
+                        .HasForeignKey("RemedioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
