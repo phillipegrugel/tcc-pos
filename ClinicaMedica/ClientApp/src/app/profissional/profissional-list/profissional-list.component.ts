@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ProfissionalModel } from 'src/app/Models/profissional.module';
-import { PoTableColumn, PoPageAction, PoTableAction, PoNotification, PoNotificationService, PoDialogService } from '@portinari/portinari-ui';
+import { PoTableColumn, PoPageAction, PoTableAction, PoNotification, PoNotificationService, PoDialogService, PoPageFilter } from '@portinari/portinari-ui';
 import { Router } from '@angular/router';
 
 @Component({
@@ -33,11 +33,26 @@ export class ProfissionalListComponent implements OnInit {
     { action: this.onRemoveProfissional.bind(this), label: 'Remover', type: 'danger', separator: true }
   ];
 
+  public readonly filter: PoPageFilter = {
+    action: this.loadData.bind(this),
+    ngModel: 'searchTerm',
+    placeholder: 'Nome para pesquisar...'
+  };
+
+  public searchTerm: string;
+
   constructor(private httpClient: HttpClient,
     @Inject('BASE_URL') private baseUrl: string,
     private router: Router,
     private poNotification: PoNotificationService,
     private poDialogService: PoDialogService) { 
+    this.loadData()
+   }
+
+  ngOnInit() {
+  }
+
+  public loadData () {
     this.httpClient.get<ProfissionalModel[]>(this.baseUrl + 'api/profissional').subscribe(result => {
       console.log(result);
       this.profissionais = result;
@@ -45,10 +60,10 @@ export class ProfissionalListComponent implements OnInit {
         profissional.tipoString = profissional.tipo.toString();
       });
       this.loading = false;
+      if (this.searchTerm.length > 0) {
+        this.profissionais = this.profissionais.filter(p => p.nome.includes(this.searchTerm));
+      }
     }, error => console.error(error));
-   }
-
-  ngOnInit() {
   }
 
   private onEditProfissional(profissional) {

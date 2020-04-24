@@ -14,6 +14,7 @@ import { AuthService } from '../shared/auth.service';
 export class LoginComponent implements OnInit {
 
   private baseURL: string;
+  public loading: Boolean = true;
   constructor(private httpClient: HttpClient,
     private authService: AuthService,
     private router: Router,
@@ -25,13 +26,15 @@ export class LoginComponent implements OnInit {
   }
 
   async onCheckLogin(formData: any) {
+    this.loading = false;
     this.httpClient.post(this.baseURL + 'api/user/login', { login: formData.login, senha: formData.password})
     .toPromise()
     .then((result: any) => {
         if (result.token) {
           //this.updateUserNameStorage(objLogin.userName, objLogin.rememberUser);
           this.authService.setSession(result);
-          this.router.navigate([''])
+          this.router.navigate(['']);
+          this.loading = true;
       }
     });
   }

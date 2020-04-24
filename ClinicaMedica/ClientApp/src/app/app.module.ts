@@ -17,6 +17,8 @@ import { LoginModule } from './login/login.module';
 import { AuthGuard } from './shared/auth.guard';
 import { AuthInterceptor } from './shared/auth.interceptor';
 import { AuthService } from './shared/auth.service';
+import { LoaderModule } from './shared/Components/loader/loader.module';
+import { LoaderInterceptor } from './shared/loader.interceptor';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import { AuthService } from './shared/auth.service';
     HttpClientModule,
     FormsModule,
     LoginModule,
+    LoaderModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full', canActivate: [AuthGuard] },
       { path: 'counter', component: CounterComponent, canActivate: [AuthGuard] },
@@ -52,6 +55,11 @@ import { AuthService } from './shared/auth.service';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]

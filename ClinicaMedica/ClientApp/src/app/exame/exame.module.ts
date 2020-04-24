@@ -7,6 +7,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../shared/auth.interceptor';
 import { FormsModule } from '@angular/forms';
 import { ExameResultadoComponent } from './exame-resultado/exame-resultado.component';
+import { LoaderInterceptor } from '../shared/loader.interceptor';
+import { LoaderModule } from '../shared/Components/loader/loader.module';
 
 
 
@@ -16,13 +18,19 @@ import { ExameResultadoComponent } from './exame-resultado/exame-resultado.compo
     CommonModule,
     PoModule,
     FormsModule,
-    ExameRoutingModule
+    ExameRoutingModule,
+    LoaderModule
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true
     }
   ]
 })

@@ -12,6 +12,8 @@ import { AuthInterceptor } from '../shared/auth.interceptor';
 import { ConsultaExecuteComponent } from './consulta-execute/consulta-execute.component';
 import { RemedioLookupService } from '../shared/remedio-lookup.service';
 import { ExameLookupService } from '../shared/exame-lookup.service';
+import { LoaderInterceptor } from '../shared/loader.interceptor';
+import { LoaderModule } from '../shared/Components/loader/loader.module';
 
 
 
@@ -22,7 +24,8 @@ import { ExameLookupService } from '../shared/exame-lookup.service';
     ConsultaRoutingModule,
     PoModule,
     FormsModule,
-    PoFieldModule
+    PoFieldModule,
+    LoaderModule
   ],
   providers: [
     PacienteLookupService,
@@ -33,6 +36,11 @@ import { ExameLookupService } from '../shared/exame-lookup.service';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true
     }
   ]
 })

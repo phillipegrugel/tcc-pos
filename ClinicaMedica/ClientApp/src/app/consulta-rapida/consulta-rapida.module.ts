@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../shared/auth.interceptor';
 import { PacienteLookupService } from '../shared/paciente-lookup.service';
+import { LoaderInterceptor } from '../shared/loader.interceptor';
+import { LoaderModule } from '../shared/Components/loader/loader.module';
 
 
 @NgModule({
@@ -17,7 +19,8 @@ import { PacienteLookupService } from '../shared/paciente-lookup.service';
     ConsultaRapidaRoutingModule,
     PoModule,
     FormsModule,
-    ConsultaRapidaRoutingModule
+    ConsultaRapidaRoutingModule,
+    LoaderModule
   ],
   providers: [
     {
@@ -25,7 +28,12 @@ import { PacienteLookupService } from '../shared/paciente-lookup.service';
       useClass: AuthInterceptor,
       multi: true,
     },
-    PacienteLookupService
+    PacienteLookupService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true
+    }
   ]
 })
 export class ConsultaRapidaModule { }

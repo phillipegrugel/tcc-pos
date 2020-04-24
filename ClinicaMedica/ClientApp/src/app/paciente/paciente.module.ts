@@ -10,6 +10,8 @@ import { FormsModule } from '@angular/forms';
 import { PacienteFormComponent } from './paciente-form/paciente-form.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../shared/auth.interceptor';
+import { LoaderInterceptor } from '../shared/loader.interceptor';
+import { LoaderModule } from '../shared/Components/loader/loader.module';
 
 
 @NgModule({
@@ -19,13 +21,19 @@ import { AuthInterceptor } from '../shared/auth.interceptor';
     PacienteRoutingModule,
     PoModule,
     FormsModule,
-    PoFieldModule
+    PoFieldModule,
+    LoaderModule
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true
     }
   ]
 })

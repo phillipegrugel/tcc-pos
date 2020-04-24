@@ -9,6 +9,8 @@ import { PoFieldModule } from '@portinari/portinari-ui';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../shared/auth.interceptor';
+import { LoaderInterceptor } from '../shared/loader.interceptor';
+import { LoaderModule } from '../shared/Components/loader/loader.module';
 
 
 @NgModule({
@@ -18,7 +20,8 @@ import { AuthInterceptor } from '../shared/auth.interceptor';
     ProfissionalRoutingModule,
     PoModule,
     FormsModule,
-    PoFieldModule
+    PoFieldModule,
+    LoaderModule
   ],
   exports: [
     ProfissionalListComponent
@@ -31,6 +34,11 @@ import { AuthInterceptor } from '../shared/auth.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true
     }
   ]
 })
