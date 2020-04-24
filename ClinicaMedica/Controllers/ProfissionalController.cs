@@ -39,21 +39,21 @@ namespace ClinicaMedica.Controllers
 
     [HttpPost]
     [Authorize(Roles = "medico,secretaria")]
-    public async Task<bool> Post(ProfissionalModel profissional)
+    public async Task<dynamic> Post(ProfissionalModel profissional)
     {
       return await _profissionalService.CreateProfissional(profissional);
     }
 
     [HttpPut]
     [Authorize(Roles = "medico,secretaria")]
-    public async Task<bool> Put(ProfissionalModel profissional)
+    public async Task<dynamic> Put(ProfissionalModel profissional)
     {
       return await _profissionalService.UpdateProfissional(profissional);
     }
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "medico,secretaria")]
-    public async Task<bool> Delete(int id)
+    public async Task<dynamic> Delete(int id)
     {
       return await _profissionalService.Delete(id);
     }

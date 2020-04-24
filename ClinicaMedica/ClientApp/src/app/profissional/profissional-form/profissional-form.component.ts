@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ProfissionalModule } from '../profissional.module';
 import { HttpClient } from '@angular/common/http';
-import { PoSelectOption } from '@portinari/portinari-ui';
+import { PoSelectOption, PoNotificationService } from '@portinari/portinari-ui';
 import { ProfissionalModel } from 'src/app/Models/profissional.module';
 import { TipoProfissional } from 'src/app/Models/tipo.profissional.enum';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -41,7 +41,11 @@ export class ProfissionalFormComponent implements OnInit {
     { value: TipoProfissional.Recepcionista, label: 'Recepcionista' }
   ];
 
-  constructor(private httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string, private router: Router, private route: ActivatedRoute) {
+  constructor(private httpClient: HttpClient,
+    @Inject('BASE_URL') baseUrl: string,
+    private router: Router,
+    private route: ActivatedRoute,
+    private poNotification: PoNotificationService) {
     this.baseURL = baseUrl;
    }
 
@@ -64,13 +68,24 @@ export class ProfissionalFormComponent implements OnInit {
 
   save() {
     if (this.isNewProfissional) {
-      this.httpClient.post(this.baseURL + 'api/profissional', this.profissional).subscribe(result => {
-        this.router.navigateByUrl('/profissional');
-      }, error => console.error(error));
+      this.httpClient.post<any>(this.baseURL + 'api/profissional', this.profissional).subscribe(result => {
+        debugger;
+        if (result.result.error) {
+          this.poNotification.error(result.result.mensagem);
+        } else {
+          this.poNotification.success(result.result.mensagem);
+          this.router.navigateByUrl('/profissional');
+        }
+      }, error => this.poNotification.error(error));
     } else {
-      this.httpClient.put(this.baseURL + 'api/profissional', this.profissional).subscribe(result => {
-        this.router.navigateByUrl('/profissional');
-      }, error => console.error(error));
+      this.httpClient.put<any>(this.baseURL + 'api/profissional', this.profissional).subscribe(result => {
+        if (result.result.error) {
+          this.poNotification.error(result.result.mensagem);
+        } else {
+          this.poNotification.success(result.result.mensagem);
+          this.router.navigateByUrl('/profissional');
+        }
+      }, error => this.poNotification.error(error));
     }
   }
 
@@ -78,4 +93,7 @@ export class ProfissionalFormComponent implements OnInit {
     this.router.navigateByUrl('/profissional');
   }
 
+  isMedico() {
+    return this.profissional.tipo == TipoProfissional.Medico;
+  }
 }

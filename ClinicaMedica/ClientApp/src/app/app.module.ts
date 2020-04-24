@@ -39,7 +39,8 @@ import { AuthService } from './shared/auth.service';
       { path: 'paciente', loadChildren: './paciente/paciente.module#PacienteModule', canActivate: [AuthGuard] },
       { path: 'remedio', loadChildren: './remedio/remedio.module#RemedioModule', canActivate: [AuthGuard] },
       { path: 'consulta', loadChildren: './consulta/consulta.module#ConsultaModule', canActivate: [AuthGuard] },
-      { path: 'exame', loadChildren: './exame/exame.module#ExameModule', canActivate: [AuthGuard] }
+      { path: 'exame', loadChildren: './exame/exame.module#ExameModule', canActivate: [AuthGuard] },
+      { path: 'consulta-rapida', loadChildren: './consulta-rapida/consulta-rapida.module#ConsultaRapidaModule', canActivate: [AuthGuard] }
     ]),
     PoModule,
     RouterModule.forRoot([])

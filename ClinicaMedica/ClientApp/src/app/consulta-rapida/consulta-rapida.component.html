@@ -1,0 +1,17 @@
+<po-page-edit
+    p-title="Nova consulta"
+    (p-cancel)="cancel()"
+    (p-save)="save()">
+    <po-lookup
+      class="po-md-12"
+      name="paciente"
+      [(ngModel)]="idPaciente"
+      p-field-label="nome"
+      p-field-value="id"
+      p-label="Paciente"
+      [p-columns]="columns"
+      [p-field-format]="fieldFormat"
+      [p-filter-service]="service"
+      [p-literals]="{'modalTitle' : 'Pacientes'}">
+    </po-lookup>
+</po-page-edit>

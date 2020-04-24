@@ -61,5 +61,17 @@ namespace ClinicaMedica.Controllers
         {
             return await _consultaService.SalvarHistorico(consulta);
         }
+
+        [HttpPost("GeraConsultaRapida")]
+        [Authorize]
+        public async Task<dynamic> GeraConsultaRapida([FromBody]int idPaciente)
+        {
+            string mensagem = await _consultaService.GeraConsultaRapida(idPaciente);
+
+            return new
+            {
+                message = mensagem
+            };
+        }
   }
 }

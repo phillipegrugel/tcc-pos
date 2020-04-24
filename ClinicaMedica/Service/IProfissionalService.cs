@@ -8,11 +8,11 @@ namespace ClinicaMedica.Service
 {
   public interface IProfissionalService
   {
-    Task<bool> CreateProfissional(ProfissionalModel profissionalModel);
+    Task<dynamic> CreateProfissional(ProfissionalModel profissionalModel);
     Task<List<ProfissionalModel>> BuscaProfissionais();
     Task<ProfissionalModel> BuscaProfissional(int id);
-    Task<bool> UpdateProfissional(ProfissionalModel profissionalModel);
-    Task<bool> Delete(int id);
+    Task<dynamic> UpdateProfissional(ProfissionalModel profissionalModel);
+    Task<dynamic> Delete(int id);
     Task<List<ProfissionalModel>> BuscaMedicos();
     List<HorarioModel> BuscaHorariosDisponiveisMedico(int idMedico, DateTime data);
   }

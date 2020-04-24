@@ -14,6 +14,7 @@
     <po-input class="po-md-4"
         name="CPF"
         [(ngModel)]="profissional.cpf"
+        p-mask="999.999.999-99"
         p-label="CPF">
     </po-input>
     <po-email class="po-md-4"
@@ -24,9 +25,16 @@
     <po-input class="po-md-4"
         name="telefone"
         [(ngModel)]="profissional.telefone"
+        p-mask="(99) 99999-9999"
         p-label="Telefone">
     </po-input>
     <po-divider class="po-sm-12" p-label="Dados profissionais"></po-divider>
+    <po-select class="po-md-4"
+        name="tipo"
+        [p-options]="tipoOptions"
+        [(ngModel)]="profissional.tipo"
+        p-label="Tipo">
+    </po-select>
     <po-input class="po-md-4"
         name="carteira-trabalho"
         [(ngModel)]="profissional.numeroCarteiraTrabalho"
@@ -35,14 +43,9 @@
     <po-input class="po-md-4"
         name="crm"
         [(ngModel)]="profissional.crm"
-        p-label="CRM">
+        p-label="CRM"
+        *ngIf="isMedico()">
     </po-input>
-    <po-select class="po-md-4"
-        name="tipo"
-        [p-options]="tipoOptions"
-        [(ngModel)]="profissional.tipo"
-        p-label="Tipo">
-    </po-select>
     <po-divider class="po-sm-12" p-label="Segurança"></po-divider>
     <po-password class="po-md-4"
         name="senha"

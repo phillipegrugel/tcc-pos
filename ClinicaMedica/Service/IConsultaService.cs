@@ -15,5 +15,6 @@ namespace ClinicaMedica.Service
     Task<bool> Delete(int id);
     Task<bool> SalvarHistorico(ConsultaModel consulta);
     HistoricoClinicoModel GetHistoricoClinico(int id, bool addConsultaModel);
+    Task<dynamic> GeraConsultaRapida(int idPaciente);
   }
 }

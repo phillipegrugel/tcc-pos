@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ProfissionalModel } from 'src/app/Models/profissional.module';
-import { PoTableColumn, PoPageAction, PoTableAction, PoNotification, PoNotificationService } from '@portinari/portinari-ui';
+import { PoTableColumn, PoPageAction, PoTableAction, PoNotification, PoNotificationService, PoDialogService } from '@portinari/portinari-ui';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,7 +18,7 @@ export class ProfissionalListComponent implements OnInit {
     { property: 'cpf', label: 'CPF' },
     { property: 'dataNascimento', label: 'Data de nascimento', type: 'date' },
     { property: 'email', type:'link', action: this.sendMail.bind(this) },
-    { property: 'tipoString', type: 'subtitle', subtitles: [
+    { property: 'tipoString', label: 'Tipo', type: 'subtitle', subtitles: [
         { value: '0', color: 'color-01', content: 'M', label: 'Médico' },
         { value: '1', color: 'color-04', content: 'R', label: 'Recepcionista' }
       ] }
@@ -33,8 +33,11 @@ export class ProfissionalListComponent implements OnInit {
     { action: this.onRemoveProfissional.bind(this), label: 'Remover', type: 'danger', separator: true }
   ];
 
-  constructor(private httpClient: HttpClient, @Inject('BASE_URL') private baseUrl: string, private router: Router,
-    private poNotification: PoNotificationService) { 
+  constructor(private httpClient: HttpClient,
+    @Inject('BASE_URL') private baseUrl: string,
+    private router: Router,
+    private poNotification: PoNotificationService,
+    private poDialogService: PoDialogService) { 
     this.httpClient.get<ProfissionalModel[]>(this.baseUrl + 'api/profissional').subscribe(result => {
       console.log(result);
       this.profissionais = result;
@@ -57,7 +60,6 @@ export class ProfissionalListComponent implements OnInit {
     const subject = 'Contato';
 
     window.open(`mailto:${email}?subject=${subject}&body=${body}`, '_self');
-    
   }
 
   private onNewProfissional() {
@@ -65,9 +67,22 @@ export class ProfissionalListComponent implements OnInit {
   }
 
   private onRemoveProfissional(profissional) {
-    this.httpClient.delete(this.baseUrl + 'api/profissional/'+profissional.id).subscribe(result => {
-      this.poNotification.warning('Profissional apagado com sucesso.');
-      this.profissionais.splice(this.profissionais.indexOf(profissional), 1);
+
+    this.poDialogService.confirm({
+      title: 'Excluir profissional',
+      message: `O profissional ${profissional.nome} será excluído, confirmar?`,
+      confirm: () => this.excluirProfissional(profissional)
+    });
+  }
+
+  private excluirProfissional(profissional) {
+    this.httpClient.delete<any>(this.baseUrl + 'api/profissional/'+profissional.id).subscribe(result => {
+      if (result.result.error) {
+        this.poNotification.error(result.result.mensagem);
+      } else {
+        this.poNotification.success(result.result.mensagem);
+        this.profissionais.splice(this.profissionais.indexOf(profissional), 1);
+      }
     }, error => console.error(error));
   }
 

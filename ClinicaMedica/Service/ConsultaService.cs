@@ -13,11 +13,13 @@ namespace ClinicaMedica.Service
   {
     private readonly IConsultaRepository _consultaRepository;
     private readonly BaseContext _baseContext;
+    private readonly IProfissionalService _profissionalService;
 
-    public ConsultaService(IConsultaRepository consultaRepository, BaseContext baseContext)
+    public ConsultaService(IConsultaRepository consultaRepository, BaseContext baseContext, IProfissionalService profissionalService)
     {
       _consultaRepository = consultaRepository;
       _baseContext = baseContext;
+      _profissionalService = profissionalService;
     }
     public async Task<ConsultaModel> BuscaConsulta(int id)
     {
@@ -571,6 +573,67 @@ namespace ClinicaMedica.Service
                 Id = exame.Id,
                 Nome = exame.Nome
             };
+        }
+
+        public async Task<dynamic> GeraConsultaRapida(int idPaciente)
+        {
+            try
+            {
+                DateTime data = DateTime.Now.Date;
+                List<Profissional> medicos = _baseContext.Profissionais.Where(p => p.Tipo == TipoProfissional.Medico).ToList();
+                bool encontrou = false;
+                DateTime melhorHorario = new DateTime();
+                Profissional medicoSelecionado = null;
+                HorarioModel horarioSelecionado = null;
+
+                while(!encontrou)
+                {
+                    foreach (Profissional medico in medicos)
+                    {
+                        List<HorarioModel> horarios = _profissionalService.BuscaHorariosDisponiveisMedico(medico.Id, data);
+                        foreach(HorarioModel horario in horarios)
+                        {
+                            DateTime diaHora = data;
+                            diaHora = diaHora.AddHours(horario.Value + 8);
+
+                            if (diaHora < DateTime.Now)
+                                continue;
+
+                            if (melhorHorario == DateTime.MinValue || melhorHorario > diaHora)
+                            {
+                                melhorHorario = diaHora;
+                                medicoSelecionado = medico;
+                                horarioSelecionado = horario;
+                            }
+
+                            break;
+                        }
+                    }
+
+                    data = data.AddDays(1);
+
+                    if (medicoSelecionado != null)
+                        encontrou = true;
+                }
+
+                Consulta consulta = new Consulta
+                {
+                    Data = melhorHorario.Date,
+                    Horario = horarioSelecionado.Value,
+                    Excluido = false,
+                    ProfissionalId = medicoSelecionado.Id,
+                    PacienteId = idPaciente
+                };
+
+                _baseContext.Consultas.Add(consulta);
+                _baseContext.SaveChanges();
+
+                return $"Consulta criada para o dia {consulta.Data.ToString("dd/MM/yyyy")}, no horário {horarioSelecionado.Label}.";
+            }
+            catch
+            {
+                return "Error";
+            }
         }
     }
 }
