@@ -113,6 +113,13 @@ namespace ClinicaMedica.Service
         {
             try
             {
+                List<Consulta> consultas = _baseContext.Consultas.Where(c => c.Excluido == false && c.ProfissionalId == id).ToList();
+
+                if (consultas.Count > 0)
+                {
+                    return GeraRetornoError("O profissional não será excluído pois possui vínculos com outros cadastros no sistema.");
+                }
+
                 Profissional profissional = _baseContext.Profissionais.SingleOrDefault<Profissional>(p => p.Id == id);
                 profissional.Excluido = true;
                 profissional.Pessoa = _baseContext.Pessoas.SingleOrDefault<Pessoa>(p => p.Id == profissional.PessoaId);

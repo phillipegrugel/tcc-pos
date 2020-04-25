@@ -79,7 +79,6 @@ export class ProfissionalFormComponent implements OnInit {
 
       if (this.profissional.nome.length != 0 && this.profissional.dataNascimento != null) {
         this.httpClient.post<any>(this.baseURL + 'api/profissional', this.profissional).subscribe(result => {
-          debugger;
           if (result.result.error) {
             this.poNotification.error(result.result.mensagem);
           } else {
@@ -87,19 +86,10 @@ export class ProfissionalFormComponent implements OnInit {
             this.router.navigateByUrl('/profissional');
           }
         }, error => {
-          debugger;
-          console.log(error);
-          console.log(error.error.errors[0]);
-
 
           for (var prop in error.error.errors) { 
             this.poNotification.error(error.error.errors[prop]); 
           }
-
-          // error.error.errors.forEach(err => {
-          //   this.poNotification.error(err);
-          // });
-          //this.poNotification.error(error)
         });
       }
     } else {
