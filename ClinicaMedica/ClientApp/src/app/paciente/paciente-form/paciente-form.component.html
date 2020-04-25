@@ -37,11 +37,13 @@
     <po-input class="po-md-4"
         name="nomeConvenio"
         [(ngModel)]="paciente.nomeConvenio"
-        p-label="Nome convenio">
+        p-label="Nome convenio"
+        *ngIf="paciente.possuiConvenio">
     </po-input>
     <po-input class="po-md-4"
         name="numCarteirinha"
         [(ngModel)]="paciente.numeroCarteirinha"
-        p-label="Número carteirinha">
+        p-label="Número carteirinha"
+        *ngIf="paciente.possuiConvenio">
     </po-input>
 </po-page-edit>

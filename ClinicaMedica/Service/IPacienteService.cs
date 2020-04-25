@@ -8,10 +8,10 @@ namespace ClinicaMedica.Service
 {
   public interface IPacienteService
   {
-    Task<bool> CreatePaciente(PacienteModel pacienteModel);
+    Task<dynamic> CreatePaciente(PacienteModel pacienteModel);
     Task<List<PacienteModel>> BuscaPacientes();
     Task<PacienteModel> BuscaPaciente(int id);
-    Task<bool> UpdatePaciente(PacienteModel PacienteModel);
-    Task<bool> Delete(int id);
+    Task<dynamic> UpdatePaciente(PacienteModel PacienteModel);
+    Task<dynamic> Delete(int id);
   }
 }

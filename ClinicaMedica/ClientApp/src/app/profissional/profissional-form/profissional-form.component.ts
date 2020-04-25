@@ -100,7 +100,12 @@ export class ProfissionalFormComponent implements OnInit {
           this.poNotification.success(result.result.mensagem);
           this.router.navigateByUrl('/profissional');
         }
-      }, error => this.poNotification.error(error));
+      }, error => {
+
+        for (var prop in error.error.errors) { 
+          this.poNotification.error(error.error.errors[prop]); 
+        }
+      });
     }
   }
 

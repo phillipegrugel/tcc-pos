@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { PacienteModel } from 'src/app/models/paciente.model';
-import { PoTableColumn, PoPageAction, PoTableAction, PoNotificationService } from '@portinari/portinari-ui';
+import { PoTableColumn, PoPageAction, PoTableAction, PoNotificationService, PoPageFilter, PoDialogService } from '@portinari/portinari-ui';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -29,15 +29,32 @@ export class PacienteListComponent implements OnInit {
     { action: this.onRemovePaciente.bind(this), label: 'Remover', type: 'danger', separator: true }
   ];
 
-  constructor(private httpClient: HttpClient, @Inject('BASE_URL') private baseUrl: string, private router: Router,
-    private poNotification: PoNotificationService) { 
-    this.httpClient.get<PacienteModel[]>(this.baseUrl + 'api/paciente').subscribe(result => {
-      console.log(result);
-      this.pacientes = result;
-      this.loading = false;
-    }, error => console.error(error));
+
+  public searchTerm: string;
+
+  public readonly filter: PoPageFilter = {
+    action: this.loadData.bind(this),
+    ngModel: 'searchTerm',
+    placeholder: 'Nome para pesquisar...'
+  };
+
+  constructor(private httpClient: HttpClient,
+    @Inject('BASE_URL') private baseUrl: string,
+    private router: Router,
+    private poNotification: PoNotificationService,
+    private poDialogService: PoDialogService) { 
+      this.loadData();
    }
 
+   public loadData() {
+    this.httpClient.get<PacienteModel[]>(this.baseUrl + 'api/paciente').subscribe(result => {
+      this.pacientes = result;
+      this.loading = false;
+      if (this.searchTerm.length > 0) {
+        this.pacientes = this.pacientes.filter(p => p.nome.includes(this.searchTerm));
+      }
+    }, error => console.error(error));
+   }
 
   ngOnInit() {
   }
@@ -59,9 +76,22 @@ export class PacienteListComponent implements OnInit {
   }
 
   private onRemovePaciente(paciente) {
-    this.httpClient.delete(this.baseUrl + 'api/paciente/'+paciente.id).subscribe(result => {
-      this.poNotification.warning('Paciente apagado com sucesso.');
-      this.pacientes.splice(this.pacientes.indexOf(paciente), 1);
+
+    this.poDialogService.confirm({
+      title: 'Excluir profissional',
+      message: `O profissional ${paciente.nome} será excluído, confirmar?`,
+      confirm: () => this.excluirPaciente(paciente)
+    });
+  }
+
+  private excluirPaciente(paciente) {
+    this.httpClient.delete<any>(this.baseUrl + 'api/paciente/'+paciente.id).subscribe(result => {
+      if (result.result.error) {
+        this.poNotification.error(result.result.mensagem);
+      } else {
+        this.poNotification.success(result.result.mensagem);
+        this.pacientes.splice(this.pacientes.indexOf(paciente), 1);
+      }
     }, error => console.error(error));
   }
 

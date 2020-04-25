@@ -3,6 +3,7 @@ import { PacienteModel } from 'src/app/models/paciente.model';
 import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { PoNotificationService } from '@portinari/portinari-ui';
 
 @Component({
   selector: 'app-paciente-form',
@@ -27,7 +28,11 @@ export class PacienteFormComponent implements OnInit {
   private paramsSub: Subscription;
   private baseURL: string;
 
-  constructor(private httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string, private router: Router, private route: ActivatedRoute) {
+  constructor(private httpClient: HttpClient,
+    @Inject('BASE_URL') baseUrl: string,
+    private router: Router,
+    private route: ActivatedRoute,
+    private poNotification: PoNotificationService) {
     this.baseURL = baseUrl;
    }
 
@@ -49,13 +54,40 @@ export class PacienteFormComponent implements OnInit {
 
   save() {
     if (this.isNewPaciente) {
-      this.httpClient.post(this.baseURL + 'api/paciente', this.paciente).subscribe(result => {
-        this.router.navigateByUrl('/paciente');
-      }, error => console.error(error));
+
+      if (this.paciente.dataNascimento == null) {
+        this.poNotification.error("Campo data de nascimento é obrigatório.");
+        return;
+      }
+
+      this.httpClient.post<any>(this.baseURL + 'api/paciente', this.paciente).subscribe(result => {
+        debugger;
+        if (result.result.error) {
+          this.poNotification.error(result.result.mensagem);
+        } else {
+          this.poNotification.success(result.result.mensagem);
+          this.router.navigateByUrl('/paciente');
+        }
+      }, error => {
+
+        for (var prop in error.error.errors) { 
+          this.poNotification.error(error.error.errors[prop]); 
+        }
+      });
     } else {
-      this.httpClient.put(this.baseURL + 'api/paciente', this.paciente).subscribe(result => {
-        this.router.navigateByUrl('/paciente');
-      }, error => console.error(error));
+      this.httpClient.put<any>(this.baseURL + 'api/paciente', this.paciente).subscribe(result => {
+        if (result.result.error) {
+          this.poNotification.error(result.result.mensagem);
+        } else {
+          this.poNotification.success(result.result.mensagem);
+          this.router.navigateByUrl('/paciente');
+        }
+      }, error => {
+
+        for (var prop in error.error.errors) { 
+          this.poNotification.error(error.error.errors[prop]); 
+        }
+      });
     }
   }
 

@@ -54,7 +54,6 @@ export class ProfissionalListComponent implements OnInit {
 
   public loadData () {
     this.httpClient.get<ProfissionalModel[]>(this.baseUrl + 'api/profissional').subscribe(result => {
-      console.log(result);
       this.profissionais = result;
       this.profissionais.forEach(profissional => {
         profissional.tipoString = profissional.tipo.toString();
