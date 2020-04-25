@@ -68,15 +68,40 @@ export class ProfissionalFormComponent implements OnInit {
 
   save() {
     if (this.isNewProfissional) {
-      this.httpClient.post<any>(this.baseURL + 'api/profissional', this.profissional).subscribe(result => {
-        debugger;
-        if (result.result.error) {
-          this.poNotification.error(result.result.mensagem);
-        } else {
-          this.poNotification.success(result.result.mensagem);
-          this.router.navigateByUrl('/profissional');
-        }
-      }, error => this.poNotification.error(error));
+
+      if (this.profissional.nome.length == 0) {
+        this.poNotification.error("Campo nome obrigatório.");
+      }
+
+      if (this.profissional.dataNascimento == null) {
+        this.poNotification.error("Campo data de nascimento obrigatório.")
+      }
+
+      if (this.profissional.nome.length != 0 && this.profissional.dataNascimento != null) {
+        this.httpClient.post<any>(this.baseURL + 'api/profissional', this.profissional).subscribe(result => {
+          debugger;
+          if (result.result.error) {
+            this.poNotification.error(result.result.mensagem);
+          } else {
+            this.poNotification.success(result.result.mensagem);
+            this.router.navigateByUrl('/profissional');
+          }
+        }, error => {
+          debugger;
+          console.log(error);
+          console.log(error.error.errors[0]);
+
+
+          for (var prop in error.error.errors) { 
+            this.poNotification.error(error.error.errors[prop]); 
+          }
+
+          // error.error.errors.forEach(err => {
+          //   this.poNotification.error(err);
+          // });
+          //this.poNotification.error(error)
+        });
+      }
     } else {
       this.httpClient.put<any>(this.baseURL + 'api/profissional', this.profissional).subscribe(result => {
         if (result.result.error) {

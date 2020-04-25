@@ -25,5 +25,14 @@ namespace ClinicaMedica.Service
                 mensagem
             };
         }
+
+        public async Task<dynamic> GeraRetornoNullError(string campo)
+        {
+            return new
+            {
+                error = true,
+                mensagem = $"Campo {campo} obrigatório."
+            };
+        }
     }
 }

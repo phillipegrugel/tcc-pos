@@ -11,75 +11,75 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaMedica.Controllers
 {
-  [Route("api/[controller]")]
-  [ApiController]
-  public class ProfissionalController : ControllerBase
-  {
-    private readonly IProfissionalService _profissionalService;
-    public ProfissionalController(IProfissionalService profissionalService)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ProfissionalController : ControllerBase
     {
-      _profissionalService = profissionalService;
-    }
+        private readonly IProfissionalService _profissionalService;
+        public ProfissionalController(IProfissionalService profissionalService)
+        {
+            _profissionalService = profissionalService;
+        }
 
-    [HttpGet]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<IEnumerable<ProfissionalModel>> Get()
-    {
-      return await _profissionalService.BuscaProfissionais();
-    }
+        [HttpGet]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<IEnumerable<ProfissionalModel>> Get()
+        {
+            return await _profissionalService.BuscaProfissionais();
+        }
 
-    [HttpGet("{id}", Name = "Profissional")]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<ProfissionalModel> Get(int id)
-    {
-      //return await _profissionalService.BuscaProfissional(id);
-      ProfissionalModel profissionalModel = await _profissionalService.BuscaProfissional(id);
-      return profissionalModel;
-    }
+        [HttpGet("{id}", Name = "Profissional")]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<ProfissionalModel> Get(int id)
+        {
+            //return await _profissionalService.BuscaProfissional(id);
+            ProfissionalModel profissionalModel = await _profissionalService.BuscaProfissional(id);
+            return profissionalModel;
+        }
 
-    [HttpPost]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<dynamic> Post(ProfissionalModel profissional)
-    {
-      return await _profissionalService.CreateProfissional(profissional);
-    }
+        [HttpPost]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<dynamic> Post(ProfissionalModel profissional)
+        {
+            return await _profissionalService.CreateProfissional(profissional);
+        }
 
-    [HttpPut]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<dynamic> Put(ProfissionalModel profissional)
-    {
-      return await _profissionalService.UpdateProfissional(profissional);
-    }
+        [HttpPut]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<dynamic> Put(ProfissionalModel profissional)
+        {
+            return await _profissionalService.UpdateProfissional(profissional);
+        }
 
-    [HttpDelete("{id}")]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<dynamic> Delete(int id)
-    {
-      return await _profissionalService.Delete(id);
-    }
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<dynamic> Delete(int id)
+        {
+            return await _profissionalService.Delete(id);
+        }
 
-    [HttpGet("MedicoGetLookup")]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<ProfissionalLookup> MedicoGetLookup()
-    {
-      List<ProfissionalModel> listMedicos = await _profissionalService.BuscaMedicos();
-      return new ProfissionalLookup()
-      {
-        Items = listMedicos
-      };
-    }
+        [HttpGet("MedicoGetLookup")]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<ProfissionalLookup> MedicoGetLookup()
+        {
+            List<ProfissionalModel> listMedicos = await _profissionalService.BuscaMedicos();
+            return new ProfissionalLookup()
+            {
+                Items = listMedicos
+            };
+        }
 
-    [HttpPost("GetHorariosDisponiveisMedicos")]
-    [Authorize(Roles = "medico,secretaria")]
-    public List<HorarioModel> GetHorariosDisponiveisMedico([FromBody]Params param)
-    {
-      return _profissionalService.BuscaHorariosDisponiveisMedico(param.idMedico, param.data);
-    }
+        [HttpPost("GetHorariosDisponiveisMedicos")]
+        [Authorize(Roles = "medico,secretaria")]
+        public List<HorarioModel> GetHorariosDisponiveisMedico([FromBody]Params param)
+        {
+            return _profissionalService.BuscaHorariosDisponiveisMedico(param.idMedico, param.data);
+        }
 
-    public class Params
-    {
-      public int idMedico { get; set; }
-      public DateTime data { get; set; }
+        public class Params
+        {
+            public int idMedico { get; set; }
+            public DateTime data { get; set; }
+        }
     }
-  }
 }

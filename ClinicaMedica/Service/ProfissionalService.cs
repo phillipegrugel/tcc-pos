@@ -14,18 +14,46 @@ namespace ClinicaMedica.Service
     public class ProfissionalService : ServiceBase, IProfissionalService
     {
         private readonly IProfissionalRepository _profissionalRepository;
+        private readonly IPessoaRepository _pessoaRepository;
         private readonly BaseContext _baseContext;
 
-        public ProfissionalService(IProfissionalRepository profissionalRepository, BaseContext baseContext)
+        public ProfissionalService(IProfissionalRepository profissionalRepository, IPessoaRepository pessoaRepository, BaseContext baseContext)
         {
             _profissionalRepository = profissionalRepository;
+            _pessoaRepository = pessoaRepository;
             _baseContext = baseContext;
+        }
+
+        private async Task<dynamic> Validacoes(ProfissionalModel profissionalModel)
+        {
+            if (profissionalModel.Usuario.Senha != profissionalModel.Usuario.ConfirmarSenha)
+                return GeraRetornoError("Senhas diferentes");
+
+            if (profissionalModel.Tipo == TipoProfissional.Medico && string.IsNullOrEmpty(profissionalModel.CRM))
+            {
+                return GeraRetornoNullError("CRM");
+            }
+            else if (profissionalModel.Tipo == TipoProfissional.Recepcionista && string.IsNullOrEmpty(profissionalModel.NumeroCarteiraTrabalho))
+            {
+                return GeraRetornoNullError("número de carteira de trabalho");
+            }
+
+            if (!IsCpf(profissionalModel.CPF))
+            {
+                return GeraRetornoError("CPF inválido.");
+            }
+
+            return null;
         }
 
         public async Task<dynamic> CreateProfissional(ProfissionalModel profissionalModel)
         {
-            if (profissionalModel.Usuario.Senha != profissionalModel.Usuario.ConfirmarSenha)
-                return GeraRetornoError("Senhas diferentes");
+            dynamic retornoValid = await Validacoes(profissionalModel);
+
+            if (retornoValid != null)
+            {
+                return retornoValid;
+            }
 
             profissionalModel.Usuario.Senha = UtilService.GerarHashMd5(profissionalModel.Usuario.Senha);
 
@@ -52,20 +80,25 @@ namespace ClinicaMedica.Service
             }
             catch (Exception e)
             {
-                return GeraRetornoError();
+                return GeraRetornoError(e.Message);
             }
         }
 
         public async Task<dynamic> UpdateProfissional(ProfissionalModel profissionalModel)
         {
-            if (profissionalModel.Usuario.Senha != profissionalModel.Usuario.ConfirmarSenha)
-                return GeraRetornoError("Senhas diferentes");
+            dynamic retornoValid = await Validacoes(profissionalModel);
+
+            if (retornoValid != null)
+            {
+                return retornoValid;
+            }
 
             Profissional profissional = ProfissionalByProfissionalModel(profissionalModel);
 
             try
             {
                 await _profissionalRepository.UpdateAsync(profissional);
+                await _pessoaRepository.UpdateAsync(profissional.Pessoa);
                 await _baseContext.SaveChangesAsync();
 
                 return GeraRetornoSucess("Profissional alterado.");
@@ -236,6 +269,42 @@ namespace ClinicaMedica.Service
             listaHorarios.Add(new HorarioModel() { Value = 9, Label = "17:00" });
 
             return listaHorarios;
+        }
+
+        public static bool IsCpf(string cpf)
+        {
+            int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            string tempCpf;
+            string digito;
+            int soma;
+            int resto;
+            cpf = cpf.Trim();
+            cpf = cpf.Replace(".", "").Replace("-", "");
+            if (cpf.Length != 11)
+                return false;
+            tempCpf = cpf.Substring(0, 9);
+            soma = 0;
+
+            for (int i = 0; i < 9; i++)
+                soma += int.Parse(tempCpf[i].ToString()) * multiplicador1[i];
+            resto = soma % 11;
+            if (resto < 2)
+                resto = 0;
+            else
+                resto = 11 - resto;
+            digito = resto.ToString();
+            tempCpf = tempCpf + digito;
+            soma = 0;
+            for (int i = 0; i < 10; i++)
+                soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
+            resto = soma % 11;
+            if (resto < 2)
+                resto = 0;
+            else
+                resto = 11 - resto;
+            digito = digito + resto.ToString();
+            return cpf.EndsWith(digito);
         }
     }
 }
