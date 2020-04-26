@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { PoTableColumn, PoPageAction, PoTableAction, PoNotificationService } from '@portinari/portinari-ui';
+import { PoTableColumn, PoPageAction, PoTableAction, PoNotificationService, PoPageFilter, PoDialogService } from '@portinari/portinari-ui';
 import { ConsultaModel } from 'src/app/models/consulta.model';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ export class ConsultaListComponent implements OnInit {
 
   public consultas: ConsultaModel[];
   public isMedico: boolean = false;
+  public dataFiltro: Date = new Date();
   public columns: PoTableColumn[] = [
     { property: 'id' },
     { property: 'data', label: 'Data', type: 'date' },
@@ -29,18 +30,12 @@ export class ConsultaListComponent implements OnInit {
     { action: this.onRemoveConsulta.bind(this), label: 'Cancelar', type: 'danger', separator: true }
   ];
 
-  constructor(private httpClient: HttpClient, @Inject('BASE_URL') private baseUrl: string, private router: Router,
-    private poNotification: PoNotificationService) { 
-    this.httpClient.get<ConsultaModel[]>(this.baseUrl + 'api/consulta').subscribe(result => {
-      this.consultas = result;
-      this.consultas.forEach(consulta => {
-        consulta.nomepacientelist = consulta.paciente.nome;
-        consulta.nomemedicolist = consulta.medico.nome;
-        consulta.horariolist = consulta.horario.label;
-      });
-      this.loading = false;
-    }, error => console.error(error));
-
+  constructor(private httpClient: HttpClient,
+    @Inject('BASE_URL') private baseUrl: string,
+    private router: Router,
+    private poNotification: PoNotificationService,
+    private poDialogService: PoDialogService) { 
+    this.loadData();
     this.httpClient.get<boolean>(this.baseUrl + 'api/user/isMedico').subscribe(result => {
       this.isMedico = result;
       if(result) {
@@ -58,6 +53,28 @@ export class ConsultaListComponent implements OnInit {
   ngOnInit() {
   }
 
+  public readonly filter: PoPageFilter = {
+    action: this.loadData.bind(this),
+    ngModel: 'searchTerm',
+    placeholder: 'Paciente para pesquisar...'
+  };
+
+  public searchTerm: string = '';
+
+  public loadData() {
+    this.httpClient.get<ConsultaModel[]>(this.baseUrl + 'api/consulta').subscribe(result => {
+      this.consultas = result;
+      this.consultas.forEach(consulta => {
+        consulta.nomepacientelist = consulta.paciente.nome;
+        consulta.nomemedicolist = consulta.medico.nome;
+        consulta.horariolist = consulta.horario.label;
+        if (this.searchTerm.length > 0) {
+          this.consultas = this.consultas.filter(p => p.paciente.nome.includes(this.searchTerm));
+        }
+      });
+      this.loading = false;
+    }, error => console.error(error));
+  }
   public onExecuteConsulta(consulta) {
     this.router.navigateByUrl(`/consulta/execute/${consulta.id}`);
   }
@@ -71,9 +88,22 @@ export class ConsultaListComponent implements OnInit {
   }
 
   private onRemoveConsulta(consulta) {
-    this.httpClient.delete(this.baseUrl + 'api/consulta/'+consulta.id).subscribe(result => {
-      this.poNotification.warning('Consulta apagado com sucesso.');
-      this.consultas.splice(this.consultas.indexOf(consulta), 1);
+    this.poDialogService.confirm({
+      title: 'Cancelar consulta',
+      message: `Confirmar cancelamento da consulta?`,
+      confirm: () => this.excluirConsulta(consulta)
+    });
+    
+  }
+
+  private excluirConsulta(consulta) {
+    this.httpClient.delete<any>(this.baseUrl + 'api/consulta/'+consulta.id).subscribe(result => {
+      if (result.result.error) {
+        this.poNotification.error(result.result.mensagem);
+      } else {
+        this.poNotification.success(result.result.mensagem);
+        this.consultas.splice(this.consultas.indexOf(consulta), 1);
+      }
     }, error => console.error(error));
   }
 

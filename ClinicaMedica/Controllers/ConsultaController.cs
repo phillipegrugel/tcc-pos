@@ -10,54 +10,54 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaMedica.Controllers
 {
-  [Route("api/[controller]")]
-  [ApiController]
-  public class ConsultaController : ControllerBase
-  {
-    private readonly IConsultaService _consultaService;
-    public ConsultaController(IConsultaService consultaService)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ConsultaController : ControllerBase
     {
-      _consultaService = consultaService;
-    }
+        private readonly IConsultaService _consultaService;
+        public ConsultaController(IConsultaService consultaService)
+        {
+            _consultaService = consultaService;
+        }
 
-    [HttpGet]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<IEnumerable<ConsultaModel>> Get()
-    {
-      return await _consultaService.BuscaConsultas(User.Identity.Name);
-    }
+        [HttpGet]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<IEnumerable<ConsultaModel>> Get()
+        {
+            return await _consultaService.BuscaConsultas(User.Identity.Name);
+        }
 
-    [HttpGet("{id}", Name = "Consultas")]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<ConsultaModel> Get(int id)
-    {
-      return await _consultaService.BuscaConsulta(id);
-    }
+        [HttpGet("{id}", Name = "Consultas")]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<ConsultaModel> Get(int id)
+        {
+            return await _consultaService.BuscaConsulta(id);
+        }
 
-    [HttpPost]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<bool> Post(ConsultaModel consulta)
-    {
-      return await _consultaService.CreateConsulta(consulta);
-    }
+        [HttpPost]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<dynamic> Post(ConsultaModel consulta)
+        {
+            return await _consultaService.CreateConsulta(consulta);
+        }
 
-    [HttpPut]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<bool> Put(ConsultaModel consulta)
-    {
-      return await _consultaService.UpdateConsulta(consulta);
-    }
+        [HttpPut]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<dynamic> Put(ConsultaModel consulta)
+        {
+            return await _consultaService.UpdateConsulta(consulta);
+        }
 
-    [HttpDelete("{id}")]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<bool> Delete(int id)
-    {
-      return await _consultaService.Delete(id);
-    }
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<dynamic> Delete(int id)
+        {
+            return await _consultaService.Delete(id);
+        }
 
         [HttpPost("SalvarHistorico")]
         [Authorize(Roles = "medico")]
-        public async Task<bool> SalvarHistorico(ConsultaModel consulta)
+        public async Task<dynamic> SalvarHistorico(ConsultaModel consulta)
         {
             return await _consultaService.SalvarHistorico(consulta);
         }
@@ -73,5 +73,5 @@ namespace ClinicaMedica.Controllers
                 message = mensagem
             };
         }
-  }
+    }
 }

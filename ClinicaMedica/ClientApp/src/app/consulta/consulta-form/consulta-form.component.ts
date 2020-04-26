@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PacienteLookupService } from 'src/app/shared/paciente-lookup.service';
-import { PoLookupColumn } from '@portinari/portinari-ui';
+import { PoLookupColumn, PoNotificationService } from '@portinari/portinari-ui';
 import { MedicoLookupService } from 'src/app/shared/medico-lookup.service';
 
 @Component({
@@ -56,32 +56,32 @@ export class ConsultaFormComponent implements OnInit {
     nomepacientelist: '',
     horariolist: '', 
     medico: {
-      nome: '',
-      cpf: '',
+      nome: 'medico',
+      cpf: 'medico',
       crm: '',
       dataNascimento: new Date(),
-      email: '',
+      email: 'medico',
       id: 0,
-      numeroCarteiraTrabalho: '',
-      telefone: '',
+      numeroCarteiraTrabalho: 'medico',
+      telefone: 'medico',
       tipo: TipoProfissional.Medico,
       tipoString: TipoProfissional.Medico.toString(),
       usuario: {
         confirmarSenha: '',
         id: 0,
         login: '',
-        senha: ''
+        senha: 'medico'
       }
     },
     paciente: {
-      nome: '',
-      cpf: '',
+      nome: 'medico',
+      cpf: 'medico',
       dataNascimento: new Date(),
-      email: '',
+      email: 'medico',
       id: 0,
-      telefone: '',
-      nomeConvenio: '',
-      numeroCarteirinha: '',
+      telefone: 'medico',
+      nomeConvenio: 'medico',
+      numeroCarteirinha: 'medico',
       possuiConvenio: false
     },
     horario: {
@@ -98,7 +98,8 @@ export class ConsultaFormComponent implements OnInit {
     @Inject('BASE_URL') baseUrl: string,
     private router: Router,
     private route: ActivatedRoute,
-    public serviceMedico: MedicoLookupService) {
+    public serviceMedico: MedicoLookupService,
+    private poNotification: PoNotificationService) {
     this.baseURL = baseUrl;
    }
 
@@ -119,18 +120,59 @@ export class ConsultaFormComponent implements OnInit {
   }
 
   save() {
+
+    if (this.consulta.data == null) {
+      this.poNotification.error("Campo data é obrigatório.");
+      return;
+    }
+
+    if (this.consulta.medico.id == 0) {
+      this.poNotification.error("Campo médico é obrigatório.");
+      return;
+    }
+
+    if (this.consulta.paciente.id == 0) {
+      this.poNotification.error("Campo paciente é obrigatório.");
+      return;
+    }
+
+    if (this.consulta.horario.label == '') {
+      this.poNotification.error("Campo horário é obrigatório.");
+      return;
+    }
+
     if (this.isNewConsulta) {
       this.horariosOptions.forEach(horario => {
         if (horario.value == this.consulta.horario)
           this.consulta.horario = horario;
       });
-      this.httpClient.post(this.baseURL + 'api/consulta', this.consulta).subscribe(result => {
-        this.router.navigateByUrl('/consulta');
-      }, error => console.error(error));
+      this.httpClient.post<any>(this.baseURL + 'api/consulta', this.consulta).subscribe(result => {
+        if (result.error) {
+          this.poNotification.error(result.mensagem);
+        } else {
+          this.poNotification.success(result.mensagem);
+          this.router.navigateByUrl('/consulta');
+        }
+      }, error => {
+
+        for (var prop in error.error.errors) { 
+          this.poNotification.error(error.error.errors[prop]); 
+        }
+      });
     } else {
-      this.httpClient.put(this.baseURL + 'api/consulta', this.consulta).subscribe(result => {
-        this.router.navigateByUrl('/consulta');
-      }, error => console.error(error));
+      this.httpClient.put<any>(this.baseURL + 'api/consulta', this.consulta).subscribe(result => {
+        if (result.result.error) {
+          this.poNotification.error(result.result.mensagem);
+        } else {
+          this.poNotification.success(result.result.mensagem);
+          this.router.navigateByUrl('/consulta');
+        }
+      }, error => {
+
+        for (var prop in error.error.errors) { 
+          this.poNotification.error(error.error.errors[prop]); 
+        }
+      });
     }
   }
 

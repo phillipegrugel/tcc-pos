@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConsultaModel, RemedioReceitaModel, ExameModel, PedidoExameModel } from 'src/app/models/consulta.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
-import { PoLookupColumn, PoModalAction, PoModalComponent } from '@portinari/portinari-ui';
+import { PoLookupColumn, PoModalAction, PoModalComponent, PoNotificationService } from '@portinari/portinari-ui';
 import { RemedioLookupService } from 'src/app/shared/remedio-lookup.service';
 import { RemedioModel } from 'src/app/models/remedio.model';
 import { ExameLookupService } from 'src/app/shared/exame-lookup.service';
@@ -41,7 +41,8 @@ export class ConsultaExecuteComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public remedioService: RemedioLookupService,
-    public exameService: ExameLookupService) { }
+    public exameService: ExameLookupService,
+    private poNotification: PoNotificationService) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -105,8 +106,18 @@ export class ConsultaExecuteComponent implements OnInit {
   }
 
   salvar() {
-    this.httpClient.post(`${this.baseUrl}api/consulta/salvarHistorico`, this.consulta).subscribe(result => {
+    this.httpClient.post<any>(`${this.baseUrl}api/consulta/salvarHistorico`, this.consulta).subscribe(result => {
+      if (result.result.error) {
+        this.poNotification.error(result.result.mensagem);
+      } else {
+        this.poNotification.success(result.result.mensagem);
+        this.router.navigateByUrl('/consulta');
+      }
+    }, error => {
 
+      for (var prop in error.error.errors) { 
+        this.poNotification.error(error.error.errors[prop]); 
+      }
     });
   }
 

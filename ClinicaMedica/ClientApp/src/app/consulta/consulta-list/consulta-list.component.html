@@ -1,7 +1,15 @@
 <po-page-list
     p-title="Consultas"
-    [p-actions]="actions">
+    [p-actions]="actions"
+    [p-filter]="filter">
+    <!-- <po-datepicker
+        [(ngModel)]="dataFiltro"
+        (p-change)="loadData()"
+        p-label="Data:"
+        class="po-md-2">
+    </po-datepicker> -->
     <po-table
+        class="po-md-12"
         [p-items]="consultas"
         [p-columns]="columns"
         p-sort="true"

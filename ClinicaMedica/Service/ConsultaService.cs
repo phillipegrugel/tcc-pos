@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ClinicaMedica.Service
 {
-    public class ConsultaService : IConsultaService
+    public class ConsultaService : ServiceBase, IConsultaService
     {
         private readonly IConsultaRepository _consultaRepository;
         private readonly BaseContext _baseContext;
@@ -352,9 +352,12 @@ namespace ClinicaMedica.Service
             }
         }
 
-        public async Task<bool> CreateConsulta(ConsultaModel consultaModel)
+        public async Task<dynamic> CreateConsulta(ConsultaModel consultaModel)
         {
-            ValidaAgenda(consultaModel);
+            dynamic validacoes  = ValidaAgenda(consultaModel);
+
+            if (validacoes != null)
+                return validacoes;
 
             Consulta consulta = ConsultaByConsultaModel(consultaModel);
             consulta = CarregaDadosConsulta(consulta, consultaModel);
@@ -364,12 +367,11 @@ namespace ClinicaMedica.Service
                 await _consultaRepository.AddAsync(consulta);
                 await _baseContext.SaveChangesAsync();
 
-                return true;
+                return await GeraRetornoSucess("Consulta agendada.");
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e.Message);
-                return false;
+                return await GeraRetornoError();
             }
         }
 
@@ -383,7 +385,7 @@ namespace ClinicaMedica.Service
             return consulta;
         }
 
-        private void ValidaAgenda(ConsultaModel consultaModel)
+        private dynamic ValidaAgenda(ConsultaModel consultaModel)
         {
             Consulta consultaMesmoHorario = _baseContext.Consultas.SingleOrDefault<Consulta>(c => c.Excluido == false &&
               c.ProfissionalId == consultaModel.Medico.Id &&
@@ -391,7 +393,9 @@ namespace ClinicaMedica.Service
               c.Horario == consultaModel.Horario.Value);
 
             if (consultaModel.Id > 0)
-                throw new Exception("Agenda já está alocada para outro paciente.");
+                return GeraRetornoError("O horário selecionado não está disponível.");
+
+            return null;
         }
 
         private Consulta ConsultaByConsultaModel(ConsultaModel consultaModel)
@@ -447,7 +451,7 @@ namespace ClinicaMedica.Service
             };
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<dynamic> Delete(int id)
         {
             try
             {
@@ -456,16 +460,15 @@ namespace ClinicaMedica.Service
 
                 await _consultaRepository.UpdateAsync(consulta);
                 await _baseContext.SaveChangesAsync();
-                return true;
+                return GeraRetornoSucess("Consulta cancelada.");
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e.Message);
-                return false;
+                return GeraRetornoError();
             }
         }
 
-        public async Task<bool> UpdateConsulta(ConsultaModel consultaModel)
+        public async Task<dynamic> UpdateConsulta(ConsultaModel consultaModel)
         {
             Consulta consulta = ConsultaByConsultaModel(consultaModel);
 
@@ -474,7 +477,7 @@ namespace ClinicaMedica.Service
                 await _consultaRepository.UpdateAsync(consulta);
                 await _baseContext.SaveChangesAsync();
 
-                return true;
+                return GeraRetornoSucess("Consulta alterada.");
             }
             catch (Exception e)
             {
@@ -483,18 +486,18 @@ namespace ClinicaMedica.Service
             }
         }
 
-        public async Task<bool> SalvarHistorico(ConsultaModel consultaModel)
+        public async Task<dynamic> SalvarHistorico(ConsultaModel consultaModel)
         {
             try
             {
                 HistoricoClinico historicoClinico = GetHistoricoClinicoByHistoricoClinicoModel(consultaModel);
                 _baseContext.HistoricosClinicos.Add(historicoClinico);
                 _baseContext.SaveChanges();
-                return true;
+                return GeraRetornoSucess("Histórico clinico cadastrado.");
             }
             catch
             {
-                return false;
+                return GeraRetornoError();
             }
         }
 
