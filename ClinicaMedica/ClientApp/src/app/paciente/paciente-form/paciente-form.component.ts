@@ -61,7 +61,6 @@ export class PacienteFormComponent implements OnInit {
       }
 
       this.httpClient.post<any>(this.baseURL + 'api/paciente', this.paciente).subscribe(result => {
-        debugger;
         if (result.result.error) {
           this.poNotification.error(result.result.mensagem);
         } else {

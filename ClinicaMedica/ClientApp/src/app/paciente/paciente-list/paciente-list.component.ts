@@ -78,8 +78,8 @@ export class PacienteListComponent implements OnInit {
   private onRemovePaciente(paciente) {
 
     this.poDialogService.confirm({
-      title: 'Excluir profissional',
-      message: `O profissional ${paciente.nome} será excluído, confirmar?`,
+      title: 'Excluir paciente',
+      message: `O paciente ${paciente.nome} será excluído, confirmar?`,
       confirm: () => this.excluirPaciente(paciente)
     });
   }

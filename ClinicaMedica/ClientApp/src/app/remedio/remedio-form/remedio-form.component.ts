@@ -3,6 +3,7 @@ import { RemedioModel } from 'src/app/models/remedio.model';
 import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { PoNotificationService } from '@portinari/portinari-ui';
 
 @Component({
   selector: 'app-remedio-form',
@@ -23,7 +24,11 @@ export class RemedioFormComponent implements OnInit {
   private paramsSub: Subscription;
   private baseURL: string;
 
-  constructor(private httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string, private router: Router, private route: ActivatedRoute) {
+  constructor(private httpClient: HttpClient,
+    @Inject('BASE_URL') baseUrl: string,
+    private router: Router,
+    private route: ActivatedRoute,
+    private poNotification: PoNotificationService) {
     this.baseURL = baseUrl;
    }
 
@@ -44,13 +49,32 @@ export class RemedioFormComponent implements OnInit {
 
   save() {
     if (this.isNewRemedio) {
-      this.httpClient.post(this.baseURL + 'api/remedio', this.remedio).subscribe(result => {
-        this.router.navigateByUrl('/remedio');
-      }, error => console.error(error));
+      this.httpClient.post<any>(this.baseURL + 'api/remedio', this.remedio).subscribe(result => {
+        if (result.error) {
+          this.poNotification.error(result.mensagem);
+        } else {
+          this.poNotification.success(result.mensagem);
+          this.router.navigateByUrl('/remedio');
+        }
+      }, error => {
+        for (var prop in error.error.errors) { 
+          this.poNotification.error(error.error.errors[prop]); 
+        }
+      });
     } else {
-      this.httpClient.put(this.baseURL + 'api/remedio', this.remedio).subscribe(result => {
-        this.router.navigateByUrl('/remedio');
-      }, error => console.error(error));
+      this.httpClient.put<any>(this.baseURL + 'api/remedio', this.remedio).subscribe(result => {
+        if (result.error) {
+          this.poNotification.error(result.mensagem);
+        } else {
+          this.poNotification.success(result.mensagem);
+          this.router.navigateByUrl('/remedio');
+        }
+      }, error => {
+
+        for (var prop in error.error.errors) { 
+          this.poNotification.error(error.error.errors[prop]); 
+        }
+      });
     }
   }
 

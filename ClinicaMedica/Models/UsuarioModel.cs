@@ -14,7 +14,6 @@ namespace ClinicaMedica.Models
         [Required(ErrorMessage = "Campo senha obrigatório")]
         public string Senha { get; set; }
 
-        [Required(ErrorMessage = "Campo confirmar senha obrigatório")]
         public string ConfirmarSenha { get; set; }
         public ProfissionalModel Profissional { get; set; }
         public string Role { get; set; }

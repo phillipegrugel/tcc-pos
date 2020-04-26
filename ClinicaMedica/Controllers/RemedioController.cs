@@ -11,50 +11,50 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClinicaMedica.Controllers
 {
-  [Route("api/[controller]")]
-  [ApiController]
-  public class RemedioController : ControllerBase
-  {
-    private readonly IRemedioService _remedioService;
-    public RemedioController(IRemedioService remedioService)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class RemedioController : ControllerBase
     {
-      _remedioService = remedioService;
-    }
+        private readonly IRemedioService _remedioService;
+        public RemedioController(IRemedioService remedioService)
+        {
+            _remedioService = remedioService;
+        }
 
-    [HttpGet]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<IEnumerable<RemedioModel>> Get()
-    {
-      return await _remedioService.BuscaRemedios();
-    }
+        [HttpGet]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<IEnumerable<RemedioModel>> Get()
+        {
+            return await _remedioService.BuscaRemedios();
+        }
 
-    [HttpGet("{id}", Name = "Remedios")]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<RemedioModel> Get(int id)
-    {
-      return await _remedioService.BuscaRemedio(id);
-    }
+        [HttpGet("{id}", Name = "Remedios")]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<RemedioModel> Get(int id)
+        {
+            return await _remedioService.BuscaRemedio(id);
+        }
 
-    [HttpPost]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<bool> Post(RemedioModel remedio)
-    {
-      return await _remedioService.CreateRemedio(remedio);
-    }
+        [HttpPost]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<dynamic> Post(RemedioModel remedio)
+        {
+            return await _remedioService.CreateRemedio(remedio);
+        }
 
-    [HttpPut]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<bool> Put(RemedioModel remedio)
-    {
-      return await _remedioService.UpdateRemedio(remedio);
-    }
+        [HttpPut]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<dynamic> Put(RemedioModel remedio)
+        {
+            return await _remedioService.UpdateRemedio(remedio);
+        }
 
-    [HttpDelete("{id}")]
-    [Authorize(Roles = "medico,secretaria")]
-    public async Task<bool> Delete(int id)
-    {
-      return await _remedioService.Delete(id);
-    }
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "medico,secretaria")]
+        public async Task<dynamic> Delete(int id)
+        {
+            return await _remedioService.Delete(id);
+        }
 
         [HttpGet("GetLookup")]
         [Authorize(Roles = "medico,secretaria")]

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { PoTableColumn, PoPageAction, PoTableAction, PoNotificationService } from '@portinari/portinari-ui';
+import { PoTableColumn, PoPageAction, PoTableAction, PoNotificationService, PoPageFilter, PoDialogService } from '@portinari/portinari-ui';
 import { RemedioModel } from 'src/app/models/remedio.model';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -28,14 +28,32 @@ export class RemedioListComponent implements OnInit {
     { action: this.onRemoveRemedio.bind(this), label: 'Remover', type: 'danger', separator: true }
   ];
 
-  constructor(private httpClient: HttpClient, @Inject('BASE_URL') private baseUrl: string, private router: Router,
-    private poNotification: PoNotificationService) { 
+  public searchTerm: string;
+
+  public readonly filter: PoPageFilter = {
+    action: this.loadData.bind(this),
+    ngModel: 'searchTerm',
+    placeholder: 'Nome para pesquisar...'
+  };
+
+  constructor(private httpClient: HttpClient,
+    @Inject('BASE_URL') private baseUrl: string,
+    private router: Router,
+    private poNotification: PoNotificationService,
+    private poDialogService: PoDialogService) { 
+    this.loadData();
+   }
+
+  public loadData() {
     this.httpClient.get<RemedioModel[]>(this.baseUrl + 'api/remedio').subscribe(result => {
       console.log(result);
       this.remedios = result;
       this.loading = false;
+      if (this.searchTerm.length > 0) {
+        this.remedios = this.remedios.filter(p => p.nome.includes(this.searchTerm));
+      }
     }, error => console.error(error));
-   }
+  }
 
 
   ngOnInit() {
@@ -50,9 +68,22 @@ export class RemedioListComponent implements OnInit {
   }
 
   private onRemoveRemedio(remedio) {
-    this.httpClient.delete(this.baseUrl + 'api/remedio/'+remedio.id).subscribe(result => {
-      this.poNotification.warning('Paciente apagado com sucesso.');
-      this.remedios.splice(this.remedios.indexOf(remedio), 1);
+
+    this.poDialogService.confirm({
+      title: 'Excluir remédio',
+      message: `O remédio ${remedio.nome} será excluído, confirmar?`,
+      confirm: () => this.excluirRemedio(remedio)
+    });
+  }
+
+  private excluirRemedio(remedio) {
+    this.httpClient.delete<any>(this.baseUrl + 'api/remedio/'+remedio.id).subscribe(result => {
+      if (result.error) {
+        this.poNotification.error(result.mensagem);
+      } else {
+        this.poNotification.success(result.mensagem);
+        this.remedios.splice(this.remedios.indexOf(remedio), 1);
+      }
     }, error => console.error(error));
   }
 
