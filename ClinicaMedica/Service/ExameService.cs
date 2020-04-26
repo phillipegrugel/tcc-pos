@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ClinicaMedica.Service
 {
-    public class ExameService : IExameService
+    public class ExameService : ServiceBase, IExameService
     {
         private readonly IExameRepository _exameRepository;
         private readonly BaseContext _baseContext;
@@ -105,7 +105,11 @@ namespace ClinicaMedica.Service
                 {
                     Paciente = new PacienteModel
                     {
-                        Nome = pessoa.Nome
+                        Nome = pessoa.Nome,
+                        CPF  = "just",
+                        DataNascimento = DateTime.Now,
+                        Email = "just",
+                        Telefone = "just"
                     }
                 }
             };
@@ -122,18 +126,18 @@ namespace ClinicaMedica.Service
             };
         }
 
-        public async Task<bool> SalvaResultadoExame(PedidoExameModel pedidoExameModel)
+        public async Task<dynamic> SalvaResultadoExame(PedidoExameModel pedidoExameModel)
         {
             try
             {
                 PedidoExame pedidoExame = GetPedidoExameByModel(pedidoExameModel);
                 _baseContext.PedidosExames.Update(pedidoExame);
                 _baseContext.SaveChanges();
-                return true;
+                return await GeraRetornoSucess("Resultado de exame cadastrado.");
             }
             catch
             {
-                throw new Exception("Error");
+                return await GeraRetornoError();
             }
         }
 

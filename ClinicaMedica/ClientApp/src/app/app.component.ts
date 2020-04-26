@@ -20,14 +20,17 @@ export class AppComponent {
     { label: 'Remedio', link: '/remedio', shortLabel: 'Remedio', icon: 'po-icon-server' },
     { label: 'Consulta', link: '/consulta', shortLabel: 'Consulta', icon: 'po-icon-clock' },
     { label: 'Exame', link: '/exame', shortLabel: 'Exame', icon: 'po-icon-exam' },
-    { label: 'Consulta rápida', link: '/consulta-rapida', shortLabel: 'Rápida', icon: 'po-icon-change' }
+    { label: 'Consulta rápida', link: '/consulta-rapida', shortLabel: 'Rápida', icon: 'po-icon-change' },
+    { label: 'Sair', action: this.logOut.bind(this), icon: 'po-icon-exit', shortLabel: 'Sair' }
   ];
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string,private authService: AuthService) {
+  constructor(http: HttpClient,
+    @Inject('BASE_URL') baseUrl: string,
+    private authService: AuthService) {
   }
 
-  private onClick() {
-    alert('Clicked in menu item')
+  private logOut() {
+    this.authService.logout();
   }
 
   public isLogged() {

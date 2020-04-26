@@ -11,7 +11,7 @@ namespace ClinicaMedica.Service
         Task<List<ExameModel>> BuscaExames();
         Task<ExameModel> Get(int id);
         List<PedidoExameModel> BuscaExamesPendentes();
-        Task<bool> SalvaResultadoExame(PedidoExameModel pedidoExame);
+        Task<dynamic> SalvaResultadoExame(PedidoExameModel pedidoExame);
         Task<PedidoExameModel> BuscaExamePendente(int id);
     }
 }

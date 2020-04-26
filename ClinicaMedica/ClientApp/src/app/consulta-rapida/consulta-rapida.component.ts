@@ -37,7 +37,12 @@ export class ConsultaRapidaComponent implements OnInit {
 
   public save() {
     this.httpClient.post<any>(`${this.baseURL}api/consulta/GeraConsultaRapida`, this.idPaciente).subscribe(result => {
-      this.poNotification.information(result.message);
+      this.poNotification.success(result.message);
+    }, error => {
+
+      for (var prop in error.error.errors) { 
+        this.poNotification.error(error.error.errors[prop]); 
+      }
     });
   }
 

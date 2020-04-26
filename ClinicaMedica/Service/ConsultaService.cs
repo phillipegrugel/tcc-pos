@@ -583,7 +583,7 @@ namespace ClinicaMedica.Service
             try
             {
                 DateTime data = DateTime.Now.Date;
-                List<Profissional> medicos = _baseContext.Profissionais.Where(p => p.Tipo == TipoProfissional.Medico).ToList();
+                List<Profissional> medicos = _baseContext.Profissionais.Where(p => p.Tipo == TipoProfissional.Medico && p.Excluido == false).ToList();
                 bool encontrou = false;
                 DateTime melhorHorario = new DateTime();
                 Profissional medicoSelecionado = null;

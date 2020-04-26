@@ -55,7 +55,7 @@ namespace ClinicaMedica.Controllers
 
         [HttpPost("SalvaResultadoExame")]
         [Authorize]
-        public async Task<bool> SalvaResultadoExame(PedidoExameModel pedidoExame)
+        public async Task<dynamic> SalvaResultadoExame(PedidoExameModel pedidoExame)
         {
             return await _exameService.SalvaResultadoExame(pedidoExame);
         }

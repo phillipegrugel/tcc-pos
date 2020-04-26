@@ -2,6 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { PedidoExameModel } from 'src/app/models/consulta.model';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { PoNotificationService } from '@portinari/portinari-ui';
+
 
 @Component({
   selector: 'app-exame-resultado',
@@ -28,7 +30,8 @@ export class ExameResultadoComponent implements OnInit {
   constructor(private httpClient: HttpClient,
     @Inject('BASE_URL') baseUrl: string,
     private router: Router,
-    private route: ActivatedRoute,) {
+    private route: ActivatedRoute,
+    private poNotification: PoNotificationService) {
       this.baseUrl = baseUrl;
      }
 
@@ -46,7 +49,18 @@ export class ExameResultadoComponent implements OnInit {
   }
 
   public save() {
-    this.httpClient.post(`${this.baseUrl}api/exame/SalvaResultadoExame`, this.exame).subscribe(result => {
+    this.httpClient.post<any>(`${this.baseUrl}api/exame/SalvaResultadoExame`, this.exame).subscribe(result => {
+      if (result.error) {
+        this.poNotification.error(result.mensagem);
+      } else {
+        this.poNotification.success(result.mensagem);
+        this.router.navigateByUrl('/exame');
+      }
+    }, error => {
+
+      for (var prop in error.error.errors) { 
+        this.poNotification.error(error.error.errors[prop]); 
+      }
     });
   }
 
