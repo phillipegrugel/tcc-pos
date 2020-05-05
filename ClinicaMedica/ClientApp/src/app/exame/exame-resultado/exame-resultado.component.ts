@@ -65,6 +65,6 @@ export class ExameResultadoComponent implements OnInit {
   }
 
   public cancel() {
-
+    this.router.navigateByUrl('/exame');
   }
 }

@@ -28,7 +28,7 @@ export class RemedioListComponent implements OnInit {
     { action: this.onRemoveRemedio.bind(this), label: 'Remover', type: 'danger', separator: true }
   ];
 
-  public searchTerm: string;
+  public searchTerm: string = '';
 
   public readonly filter: PoPageFilter = {
     action: this.loadData.bind(this),
@@ -46,7 +46,6 @@ export class RemedioListComponent implements OnInit {
 
   public loadData() {
     this.httpClient.get<RemedioModel[]>(this.baseUrl + 'api/remedio').subscribe(result => {
-      console.log(result);
       this.remedios = result;
       this.loading = false;
       if (this.searchTerm.length > 0) {

@@ -14,11 +14,12 @@ import { RemedioLookupService } from '../shared/remedio-lookup.service';
 import { ExameLookupService } from '../shared/exame-lookup.service';
 import { LoaderInterceptor } from '../shared/loader.interceptor';
 import { LoaderModule } from '../shared/Components/loader/loader.module';
+import { EmitirReceitaComponent } from './emitir-receita/emitir-receita.component';
 
 
 
 @NgModule({
-  declarations: [ConsultaListComponent, ConsultaFormComponent, ConsultaExecuteComponent],
+  declarations: [ConsultaListComponent, ConsultaFormComponent, ConsultaExecuteComponent, EmitirReceitaComponent],
   imports: [
     CommonModule,
     ConsultaRoutingModule,

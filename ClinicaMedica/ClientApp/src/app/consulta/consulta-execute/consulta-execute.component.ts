@@ -61,7 +61,6 @@ export class ConsultaExecuteComponent implements OnInit {
       this.consulta = result;
       this.consulta.paciente.dataNascimento = new Date(result.paciente.dataNascimento);
       this.consulta.data = new Date(result.data);
-      console.log(this.consulta);
     });
   }
 
@@ -100,9 +99,14 @@ export class ConsultaExecuteComponent implements OnInit {
        nomepacientelist: '',
        historicoClinico: null
       };
+      this.exameLookupId = null;
       this.consulta.historicoClinico.exames.push(exameSolicitado);
     });
     this.poModalExame.close();
+  }
+
+  removerExame(exame) {
+    this.consulta.historicoClinico.exames.splice(this.consulta.historicoClinico.exames.indexOf(exame), 1);
   }
 
   salvar() {
@@ -119,6 +123,10 @@ export class ConsultaExecuteComponent implements OnInit {
         this.poNotification.error(error.error.errors[prop]); 
       }
     });
+  }
+
+  imprimirReceita() {
+    this.router.navigateByUrl(`/consulta/imprimir-receita/${this.consulta.id}`);
   }
 
 }

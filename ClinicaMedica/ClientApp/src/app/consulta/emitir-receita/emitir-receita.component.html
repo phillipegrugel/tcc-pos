@@ -1,0 +1,42 @@
+<po-page-detail
+    p-title="Receita">
+    <po-button
+        class="no-print"
+        p-label="Imprimir"
+        p-type="primary"
+        (p-click)="imprimir()">
+    </po-button>
+    <div *ngIf="consulta">
+        <div class="po-row">
+            <po-info
+            class="po-md-6"
+            p-label="Nome:"
+            [p-value]="consulta.paciente.nome">
+            </po-info>
+
+            <po-info
+            class="po-md-6"
+            p-label="Data da consulta:"
+            [p-value]="consulta.data | date: 'dd/MM/yyyy'">
+            </po-info>
+        </div>
+        <po-divider class="po-sm-12" p-label="Receita"></po-divider>
+        <div class="po-row" *ngFor="let remedioReceita of consulta.historicoClinico.receita.remedios">
+        <po-info
+            class="po-md-4"
+            [p-value]="remedioReceita.remedio.nome">
+        </po-info>
+        <po-info
+            class="po-md-4"
+            [p-value]="remedioReceita.observacoes">
+        </po-info>
+        </div>
+        <div class="po-row" style="margin-top: 20px;">
+            <po-info
+            class="po-md-6"
+            p-label="Médico:"
+            [p-value]="consulta.medico.nome">
+            </po-info>
+        </div>
+    </div>
+</po-page-detail>

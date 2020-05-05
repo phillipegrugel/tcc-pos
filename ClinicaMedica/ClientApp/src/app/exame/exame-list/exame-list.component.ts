@@ -31,7 +31,7 @@ export class ExameListComponent implements OnInit {
     this.loadData();
    }
 
-  public searchTerm: string;
+  public searchTerm: string = '';
 
   public readonly filter: PoPageFilter = {
     action: this.loadData.bind(this),

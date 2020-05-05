@@ -39,7 +39,7 @@ export class ProfissionalListComponent implements OnInit {
     placeholder: 'Nome para pesquisar...'
   };
 
-  public searchTerm: string;
+  public searchTerm: string = '';
 
   constructor(private httpClient: HttpClient,
     @Inject('BASE_URL') private baseUrl: string,
