@@ -14,7 +14,8 @@
     <po-input class="po-md-4"
         name="CPF"
         [(ngModel)]="paciente.cpf"
-        p-label="CPF">
+        p-label="CPF"
+        p-mask="999.999.999-99">
     </po-input>
     <po-email class="po-md-4"
         name="email"
@@ -24,7 +25,8 @@
     <po-input class="po-md-4"
         name="telefone"
         [(ngModel)]="paciente.telefone"
-        p-label="Telefone">
+        p-label="Telefone"
+        p-mask="(99) 99999-9999">
     </po-input>
     <po-divider class="po-sm-12" p-label="Dados convênio"></po-divider>
     <po-switch class="po-md-4"

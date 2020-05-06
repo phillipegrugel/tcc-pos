@@ -44,7 +44,7 @@ namespace ClinicaMedica
             services.AddEntityFrameworkSqlServer()
               .AddDbContext<BaseContext>(options =>
               {
-                  options.UseSqlServer("Data Source=localhost\\SQL;Initial Catalog=ClinicaMedicaGrugel;User ID=sa;Password=rm;",
+                  options.UseSqlServer(Configuration.GetConnectionString("ConnDB"),
               b =>
               {
                       b.MigrationsAssembly("ClinicaMedica");
