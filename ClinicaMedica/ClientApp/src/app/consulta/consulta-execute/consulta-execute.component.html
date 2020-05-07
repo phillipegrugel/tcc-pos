@@ -96,6 +96,7 @@
       [p-columns]="columns"
       [p-field-format]="fieldFormat"
       [p-filter-service]="remedioService"
+      p-placeholder="Use o botão de pesquisa..."
       [p-literals]="{'modalTitle' : 'Remédios'}"
       (p-selected)="adicionaRemedio(this)">
     </po-lookup>
@@ -118,6 +119,7 @@
       [p-columns]="columns"
       [p-field-format]="fieldFormat"
       [p-filter-service]="exameService"
+      p-placeholder="Use o botão de pesquisa..."
       [p-literals]="{'modalTitle' : 'Exames'}"
       (p-selected)="adicionaExames()">
     </po-lookup>

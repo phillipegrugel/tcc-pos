@@ -2,6 +2,16 @@
     p-title="Nova consulta"
     (p-cancel)="cancel()"
     (p-save)="save()">
+    <h1 style="font-size: large;">Informações importantes</h1>
+    <p>Nesta funcionalidade, você irá selecionar apenas o paciente e o sistema 
+      irá cadastrar a consulta mais rápida do horário atual independente do médico, respeitando o horário
+      de funcionamento da clínica.
+    </p>
+    <p>
+      Obs. se você estiver logado como médico, pode ser que a consulta seja agendada para outro
+      médico e você não consiga ve-la no menu de consultas, pois o menu de consultas é filtrado
+      apenas consultas do médico logado. Para recepcionistas são exibidas todas as consultas.
+    </p>
     <po-lookup
       class="po-md-12"
       name="paciente"
@@ -12,6 +22,7 @@
       [p-columns]="columns"
       [p-field-format]="fieldFormat"
       [p-filter-service]="service"
+      p-placeholder="Use o botão de pesquisa..."
       [p-literals]="{'modalTitle' : 'Pacientes'}">
     </po-lookup>
 </po-page-edit>

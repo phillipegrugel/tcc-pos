@@ -22,35 +22,35 @@ namespace ClinicaMedica.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "medico,secretaria")]
+        [Authorize(Roles = "medico")]
         public async Task<IEnumerable<RemedioModel>> Get()
         {
             return await _remedioService.BuscaRemedios();
         }
 
         [HttpGet("{id}", Name = "Remedios")]
-        [Authorize(Roles = "medico,secretaria")]
+        [Authorize(Roles = "medico")]
         public async Task<RemedioModel> Get(int id)
         {
             return await _remedioService.BuscaRemedio(id);
         }
 
         [HttpPost]
-        [Authorize(Roles = "medico,secretaria")]
+        [Authorize(Roles = "medico")]
         public async Task<dynamic> Post(RemedioModel remedio)
         {
             return await _remedioService.CreateRemedio(remedio);
         }
 
         [HttpPut]
-        [Authorize(Roles = "medico,secretaria")]
+        [Authorize(Roles = "medico")]
         public async Task<dynamic> Put(RemedioModel remedio)
         {
             return await _remedioService.UpdateRemedio(remedio);
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "medico,secretaria")]
+        [Authorize(Roles = "medico")]
         public async Task<dynamic> Delete(int id)
         {
             return await _remedioService.Delete(id);

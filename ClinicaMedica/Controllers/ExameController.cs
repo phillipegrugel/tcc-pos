@@ -40,21 +40,21 @@ namespace ClinicaMedica.Controllers
         }
 
         [HttpGet("GetExamesPendentes")]
-        [Authorize]
+        [Authorize(Roles = "secretaria")]
         public List<PedidoExameModel> GetExamesPendentes()
         {
             return _exameService.BuscaExamesPendentes();
         }
 
         [HttpGet("GetExamePendente/{id}", Name = "GetExamePendente")]
-        [Authorize]
+        [Authorize(Roles = "secretaria")]
         public async Task<PedidoExameModel> GetExamePendente(int id)
         {
             return await _exameService.BuscaExamePendente(id);
         }
 
         [HttpPost("SalvaResultadoExame")]
-        [Authorize]
+        [Authorize(Roles = "secretaria")]
         public async Task<dynamic> SalvaResultadoExame(PedidoExameModel pedidoExame)
         {
             return await _exameService.SalvaResultadoExame(pedidoExame);

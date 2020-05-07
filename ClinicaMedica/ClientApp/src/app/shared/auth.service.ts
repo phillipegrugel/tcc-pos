@@ -27,6 +27,7 @@ export class AuthService {
         const payload: JWTPayload = jwtDecode(result.token) as JWTPayload;
         const expiresAt = moment.unix(payload.exp);
         localStorage.setItem('token_expires_at', JSON.stringify(expiresAt.valueOf()));
+        localStorage.setItem('user_role', result.usuario.role);
       }
 
       tokenExpired() {
@@ -36,6 +37,7 @@ export class AuthService {
     logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('token_expires_at');
+        localStorage.removeItem('user_role');
     }
 }
 
