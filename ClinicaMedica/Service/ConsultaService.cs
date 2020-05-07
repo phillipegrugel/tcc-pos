@@ -388,12 +388,20 @@ namespace ClinicaMedica.Service
         private dynamic ValidaAgenda(ConsultaModel consultaModel)
         {
             Consulta consultaMesmoHorario = _baseContext.Consultas.SingleOrDefault<Consulta>(c => c.Excluido == false &&
-              c.ProfissionalId == consultaModel.Medico.Id &&
-              c.Data == consultaModel.Data &&
-              c.Horario == consultaModel.Horario.Value);
+                c.ProfissionalId == consultaModel.Medico.Id &&
+                c.Data == consultaModel.Data &&
+                c.Horario == consultaModel.Horario.Value);
 
-            if (consultaModel.Id > 0)
+            if (consultaMesmoHorario != null)
                 return GeraRetornoError("O horário selecionado não está disponível.");
+
+            Consulta consultaPacienteMesmoHorario = _baseContext.Consultas.SingleOrDefault<Consulta>(c => c.Excluido == false &&
+                c.PacienteId == consultaModel.Paciente.Id &&
+                c.Data == consultaModel.Data &&
+                c.Horario == consultaModel.Horario.Value);
+
+            if (consultaPacienteMesmoHorario != null)
+                return GeraRetornoError("O paciente já possui uma consulta agendada para o mesmo horário.");
 
             return null;
         }
@@ -604,6 +612,14 @@ namespace ClinicaMedica.Service
 
                             if (melhorHorario == DateTime.MinValue || melhorHorario > diaHora)
                             {
+                                Consulta consultaPacienteMesmoHorario = _baseContext.Consultas.FirstOrDefault(c => c.Excluido == false &&
+                                    c.PacienteId == idPaciente &&
+                                    c.Data == diaHora.Date &&
+                                    c.Horario == horario.Value);
+
+                                if (consultaPacienteMesmoHorario != null)
+                                    continue;
+
                                 melhorHorario = diaHora;
                                 medicoSelecionado = medico;
                                 horarioSelecionado = horario;

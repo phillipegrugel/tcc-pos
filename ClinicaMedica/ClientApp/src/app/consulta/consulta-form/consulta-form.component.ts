@@ -147,20 +147,7 @@ export class ConsultaFormComponent implements OnInit {
           this.consulta.horario = horario;
       });
       this.httpClient.post<any>(this.baseURL + 'api/consulta', this.consulta).subscribe(result => {
-        if (result.error) {
-          this.poNotification.error(result.mensagem);
-        } else {
-          this.poNotification.success(result.mensagem);
-          this.router.navigateByUrl('/consulta');
-        }
-      }, error => {
-
-        for (var prop in error.error.errors) { 
-          this.poNotification.error(error.error.errors[prop]); 
-        }
-      });
-    } else {
-      this.httpClient.put<any>(this.baseURL + 'api/consulta', this.consulta).subscribe(result => {
+        debugger;
         if (result.result.error) {
           this.poNotification.error(result.result.mensagem);
         } else {
@@ -168,9 +155,25 @@ export class ConsultaFormComponent implements OnInit {
           this.router.navigateByUrl('/consulta');
         }
       }, error => {
-
+        debugger;
         for (var prop in error.error.errors) { 
           this.poNotification.error(error.error.errors[prop]); 
+        }
+      });
+    } else {
+      this.httpClient.put<any>(this.baseURL + 'api/consulta', this.consulta).subscribe(result => {
+        console.log(result);
+        debugger;
+        if (result.result.error) {
+          this.poNotification.error(result.result.mensagem);
+        } else {
+          this.poNotification.success(result.result.mensagem);
+          this.router.navigateByUrl('/consulta');
+        }
+      }, error => {
+        debugger;
+        for (var prop in error.errors) { 
+          this.poNotification.error(error.errors[prop]); 
         }
       });
     }
