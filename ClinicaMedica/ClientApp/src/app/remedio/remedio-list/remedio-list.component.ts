@@ -3,6 +3,8 @@ import { PoTableColumn, PoPageAction, PoTableAction, PoNotificationService, PoPa
 import { RemedioModel } from 'src/app/models/remedio.model';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/shared/auth.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-remedio-list',
@@ -40,8 +42,15 @@ export class RemedioListComponent implements OnInit {
     @Inject('BASE_URL') private baseUrl: string,
     private router: Router,
     private poNotification: PoNotificationService,
-    private poDialogService: PoDialogService) { 
-    this.loadData();
+    private poDialogService: PoDialogService,
+    private authService: AuthService,
+    private _location: Location) {
+      if (this.authService.isMedico()) { 
+        this.loadData();
+      } else {
+        this._location.back();
+        this.poNotification.error("Você não possui permissão para acessar este menu.");
+      }
    }
 
   public loadData() {

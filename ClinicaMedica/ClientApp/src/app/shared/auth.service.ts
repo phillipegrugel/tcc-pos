@@ -1,6 +1,6 @@
 
 import * as moment from 'moment';
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import * as jwtDecode from 'jwt-decode';
 /**
  * @description
@@ -10,10 +10,16 @@ import * as jwtDecode from 'jwt-decode';
 @Injectable()
 export class AuthService {
 
+  @Output() fezLogin: EventEmitter<any> = new EventEmitter();
+
 
     public isLogged() {
         return localStorage.getItem('token') !== null && !this.tokenExpired();
       }
+
+    public isMedico() {
+      return localStorage.getItem('user_role') !== null && localStorage.getItem('user_role') == 'medico';
+    }
     
       getExpiration() {
         const expiration = localStorage.getItem('token_expires_at');
@@ -28,6 +34,7 @@ export class AuthService {
         const expiresAt = moment.unix(payload.exp);
         localStorage.setItem('token_expires_at', JSON.stringify(expiresAt.valueOf()));
         localStorage.setItem('user_role', result.usuario.role);
+        this.fezLogin.emit();
       }
 
       tokenExpired() {
@@ -35,9 +42,11 @@ export class AuthService {
     }
 
     logout() {
+      if (this.isLogged()) {
         localStorage.removeItem('token');
         localStorage.removeItem('token_expires_at');
         localStorage.removeItem('user_role');
+      }
     }
 }
 

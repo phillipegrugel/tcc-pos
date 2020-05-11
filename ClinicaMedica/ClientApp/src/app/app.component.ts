@@ -13,11 +13,13 @@ import { AuthService } from './shared/auth.service';
 })
 export class AppComponent {
 
-  public menus = this.getMenus();
+  public menus;
 
   constructor(http: HttpClient,
     @Inject('BASE_URL') baseUrl: string,
     private authService: AuthService) {
+      this.loadMenus();
+      authService.fezLogin.subscribe(() => { this.loadMenus() });
   }
 
   private logOut() {
@@ -28,7 +30,7 @@ export class AppComponent {
     return this.authService.isLogged();
   }
 
-  public getMenus() {
+  public loadMenus() {
     let menus: Array<PoMenuItem> = [
       { label: 'Home', link: '/', shortLabel: 'Home', icon: 'po-icon-home' },
       { label: 'Profissional', link: '/profissional', shortLabel: 'Profissional', icon: 'po-icon-users' },
@@ -46,6 +48,6 @@ export class AppComponent {
       menus.splice(3, 1);
     }
 
-    return menus;
+    this.menus = menus;
   }
 }

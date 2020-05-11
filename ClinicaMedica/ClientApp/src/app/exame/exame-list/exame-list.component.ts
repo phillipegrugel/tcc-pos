@@ -2,7 +2,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { PedidoExameModel } from 'src/app/models/consulta.model';
-import { PoTableColumn, PoTableAction, PoPageFilter } from '@portinari/portinari-ui';
+import { PoTableColumn, PoTableAction, PoPageFilter, PoNotificationService } from '@portinari/portinari-ui';
+import { AuthService } from 'src/app/shared/auth.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-exame-list',
@@ -27,8 +29,20 @@ export class ExameListComponent implements OnInit {
     this.router.navigateByUrl(`/exame/resultado/${exame.id}`);
   }
 
-  constructor(private httpClient: HttpClient, @Inject('BASE_URL') private baseUrl: string, private router: Router) {
-    this.loadData();
+  constructor(private httpClient: HttpClient,
+    @Inject('BASE_URL') private baseUrl: string,
+    private router: Router,
+    private authService: AuthService,
+    private poNotification: PoNotificationService,
+    private _location: Location) {
+
+      if (this.authService.isMedico())
+      {
+        this.poNotification.error("Você não possui permissão para acessar este menu.");
+        this._location.back();
+      } else {
+        this.loadData();
+      }
    }
 
   public searchTerm: string = '';

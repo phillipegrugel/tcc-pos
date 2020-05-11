@@ -3,6 +3,8 @@ import { PedidoExameModel } from 'src/app/models/consulta.model';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PoNotificationService } from '@portinari/portinari-ui';
+import { AuthService } from 'src/app/shared/auth.service';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -31,8 +33,15 @@ export class ExameResultadoComponent implements OnInit {
     @Inject('BASE_URL') baseUrl: string,
     private router: Router,
     private route: ActivatedRoute,
+    private authService: AuthService,
+    private _location: Location,
     private poNotification: PoNotificationService) {
       this.baseUrl = baseUrl;
+      if (this.authService.isMedico())
+      {
+        this.poNotification.error("Você não possui permissão para acessar este menu.");
+        this._location.back();
+      }
      }
 
   ngOnInit() {

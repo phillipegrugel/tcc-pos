@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PoNotificationService } from '@portinari/portinari-ui';
+import { Location } from '@angular/common';
+import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
   selector: 'app-remedio-form',
@@ -28,8 +30,14 @@ export class RemedioFormComponent implements OnInit {
     @Inject('BASE_URL') baseUrl: string,
     private router: Router,
     private route: ActivatedRoute,
-    private poNotification: PoNotificationService) {
+    private poNotification: PoNotificationService,
+    private authService: AuthService,
+    private _location: Location) {
     this.baseURL = baseUrl;
+    if(!this.authService.isMedico()){
+      this._location.back();
+      this.poNotification.error("Você não possui permissão para acessar este menu.");
+    }
    }
 
   ngOnInit() {

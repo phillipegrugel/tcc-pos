@@ -6,6 +6,8 @@ import * as jwtDecode from 'jwt-decode';
 import * as moment from 'moment';
 import { AuthService } from '../shared/auth.service';
 
+declare var $: any;
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -23,6 +25,9 @@ export class LoginComponent implements OnInit {
     }
 
   ngOnInit() {
+    $(document).ready(() => {
+      $('.po-page-background-footer-select').remove();
+    });
   }
 
   async onCheckLogin(formData: any) {
